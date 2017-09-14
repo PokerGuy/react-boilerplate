@@ -2,6 +2,8 @@
 
 echo "Hello, world!"
 
+mkdir node_modules
+
 npm install
 
 npm run build

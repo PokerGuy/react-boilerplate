@@ -15,6 +15,8 @@ echo $currdir
 sync=$(aws s3 sync s3://sandbox-npm-modules/react-boilerplate .)
 echo "Results of the sync command..."
 echo $sync
+echo "The exit code of the sync command..."
+echo $?
 
 echo "The contents of node_modules is..."
 contents=$(ls)

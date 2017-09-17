@@ -4,7 +4,7 @@ const aws = require('aws-sdk');
 const s3 = new aws.S3();
 
 function uploadFile(file, callback) {
-  fs.readFile('./build/' + file, function (err, data) {
+  fs.readFile('/tmp/clone/build/' + file, function (err, data) {
     if (err) {
       console.log('Error reading file');
       console.log(err);
@@ -51,8 +51,12 @@ async.series([
         Bucket: 'ez-react-boilerplate'
       };
       s3.listObjects(params, function (err, data) {
+        if (err) {
+          console.log('Error on the listObjects');
+          console.log(err);
+        }
         console.log(data);
-        if (data.Contents) {
+        if ('Contents' in data) {
           async.forEach(data.Contents, function (file, callback) {
             console.log('Deleting ' + file.Key);
             const p = {
@@ -79,7 +83,7 @@ async.series([
     },
     function (cb) {
       console.log('Uploading files to s3...');
-      fs.readdir('./build', (err, files) => {
+      fs.readdir('/tmp/clone/build', (err, files) => {
         async.forEach(files, function (file, cb) {
           console.log('Working on file: ' + file);
           uploadFile(file, cb);

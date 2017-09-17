@@ -12,7 +12,7 @@ echo "changing into the node_modules directory..."
 currdir=$(pwd)
 echo $currdir
 
-sync=$(aws s3 sync s3://sandbox-npm-modules/react-boilerplate .)
+sync=$(aws s3 cp s3://sandbox-npm-modules/react-boilerplate . --recursive)
 echo "Results of the sync command..."
 echo $sync
 echo "The exit code of the sync command..."

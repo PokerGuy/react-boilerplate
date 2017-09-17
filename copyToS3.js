@@ -4,18 +4,34 @@ const aws = require('aws-sdk');
 const s3 = new aws.S3();
 
 function uploadFile(file, callback) {
-  fs.readFile('./build/' + file, function(err,data) {
+  fs.readFile('./build/' + file, function (err, data) {
     if (err) {
       console.log('Error reading file');
       console.log(err);
       callback(err);
     } else {
       const base64data = new Buffer(data, 'binary');
-      s3.putObject({
-        'Bucket': 'ez-react-boilerplate',
-        'Key': file,
-        'Body': base64data
-      }, function(err, data) {
+      const params = {
+        Bucket: 'ez-react-boilerplate',
+        Key: file,
+        Body: base64data
+      };
+      const split = file.split('.');
+      const last = split[split.length - 1];
+      if (last === '.htaccess') {
+        params.ContentType = 'binary/octet-stream'
+      } else if (last === 'js') {
+        params.ContentType = 'application/javascript'
+      } else if (last === 'jpg') {
+        params.ContentType = 'image/jpeg'
+      } else if (last === 'ico') {
+        params.ContentType = 'image/x-icon'
+      } else if (last === 'html') {
+        params.ContentType = 'text/html'
+      } else if (last === 'json') {
+        params.ContentType = 'application/json'
+      }
+      s3.putObject(params, function (err, data) {
         if (err) {
           console.log('Oh, Snap');
           console.log(err);
@@ -28,11 +44,46 @@ function uploadFile(file, callback) {
     }
   })
 }
-fs.readdir('./build', (err, files) => {
-  async.forEach(files, function (file, cb) {
-    console.log('Working on file: ' + file);
-    uploadFile(file, cb);
-  }, function (err) {
+async.series([
+    function (cb) {
+      console.log('Cleaning s3 bucket...');
+      const params = {
+        Bucket: 'ez-react-boilerplate'
+      };
+      s3.listObjects(params, function (err, data) {
+        console.log(data);
+        async.forEach(data.Contents, function (file, callback) {
+          console.log('Deleting ' + file.Key);
+          const p = {
+            Bucket: 'ez-react-boilerplate',
+            Key: file.Key
+          };
+          s3.deleteObject(p, function (err, data) {
+            if (err) {
+              console.log('Error ' + err);
+              callback(err);
+            } else {
+              callback();
+            }
+          })
+        }, function (err) {
+          console.log('Done deleting...');
+          cb();
+        });
+      })
+    },
+    function (cb) {
+      console.log('Uploading files to s3...');
+      fs.readdir('./build', (err, files) => {
+        async.forEach(files, function (file, cb) {
+          console.log('Working on file: ' + file);
+          uploadFile(file, cb);
+        }, function (err) {
+          console.log('DONE!');
+        })
+      });
+    }
+  ],
+  function (err) {
     console.log('DONE!');
-  })
-});
+  });

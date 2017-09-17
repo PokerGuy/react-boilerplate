@@ -2,23 +2,7 @@
 
 echo "Hello, world!"
 
-echo "Downloading npm modules - cheating using npm install"
-
-mkdir node_modules
-
-cd node_modules
-
-echo "changing into the node_modules directory..."
-currdir=$(pwd)
-echo $currdir
-
-../../../.aws s3 sync s3://sandbox-npm-modules/react-boilerplate .
-
-echo "The contents of node_modules is..."
-contents=$(ls)
-echo $contents
-
-cd ..
+cd /tmp/clone
 
 echo "Back to the /tmp/clone directory..."
 currdir=$(pwd)

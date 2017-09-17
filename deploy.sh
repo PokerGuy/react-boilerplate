@@ -19,3 +19,7 @@ echo $currdir
 contents=$(ls)
 echo "contents of the build directory"
 echo $contents
+
+cd ..
+
+node copyToS3.js

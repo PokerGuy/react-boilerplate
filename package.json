@@ -239,6 +239,8 @@
     "whatwg-fetch": "2.0.1"
   },
   "devDependencies": {
+    "async": "^2.5.0",
+    "aws-sdk": "^2.117.0",
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",

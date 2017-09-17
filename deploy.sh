@@ -8,13 +8,16 @@ mkdir node_modules
 
 cd node_modules
 
-echo $(pwd)
+currdir=$(pwd)
+
+echo $currdir
 
 aws s3 sync s3://sandbox-npm-modules/react-boilerplate/ ./
 
 cd ..
 
-echo $(pwd)
+currdir=$(pwd)
+echo $currdir
 
 echo "Got all the modules... running npm build"
 
@@ -22,6 +25,7 @@ npm run build
 
 cd build
 
-echo $(pwd)
+currdir=$(pwd)
+echo $currdir
 
 ls

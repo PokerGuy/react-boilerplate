@@ -20,7 +20,11 @@ echo "Back to the /tmp/clone directory..."
 currdir=$(pwd)
 echo $currdir
 
-echo "Got all the modules... running npm build"
+echo "Got all the modules... running npm build:dll"
+
+npm run build:dll
+
+echo "Now doing npm run build"
 
 npm run build
 

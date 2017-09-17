@@ -12,7 +12,11 @@ echo "changing into the node_modules directory..."
 currdir=$(pwd)
 echo $currdir
 
-aws s3 sync s3://sandbox-npm-modules/react-boilerplate/ ./
+aws s3 sync s3://sandbox-npm-modules/react-boilerplate .
+
+echo "The contents of node_modules is..."
+contents=$(ls)
+echo $contents
 
 cd ..
 

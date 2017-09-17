@@ -8,14 +8,15 @@ mkdir node_modules
 
 cd node_modules
 
+echo "changing into the node_modules directory..."
 currdir=$(pwd)
-
 echo $currdir
 
 aws s3 sync s3://sandbox-npm-modules/react-boilerplate/ ./
 
 cd ..
 
+echo "Back to the /tmp/clone directory..."
 currdir=$(pwd)
 echo $currdir
 
@@ -25,7 +26,10 @@ npm run build
 
 cd build
 
+echo "Into the build directory"
 currdir=$(pwd)
 echo $currdir
 
-ls
+contents=$(ls)
+echo "contents of the build directory"
+echo $contents

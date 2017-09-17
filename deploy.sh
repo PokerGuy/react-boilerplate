@@ -4,12 +4,6 @@ echo "Hello, world!"
 
 cd /tmp/clone
 
-echo "Back to the /tmp/clone directory..."
-currdir=$(pwd)
-echo $currdir
-
-echo "Got all the modules... running npm install"
-
 npm install
 
 echo "now doing npm run build"

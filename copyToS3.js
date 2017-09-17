@@ -52,24 +52,29 @@ async.series([
       };
       s3.listObjects(params, function (err, data) {
         console.log(data);
-        async.forEach(data.Contents, function (file, callback) {
-          console.log('Deleting ' + file.Key);
-          const p = {
-            Bucket: 'ez-react-boilerplate',
-            Key: file.Key
-          };
-          s3.deleteObject(p, function (err, data) {
-            if (err) {
-              console.log('Error ' + err);
-              callback(err);
-            } else {
-              callback();
-            }
-          })
-        }, function (err) {
-          console.log('Done deleting...');
+        if (data.Contents) {
+          async.forEach(data.Contents, function (file, callback) {
+            console.log('Deleting ' + file.Key);
+            const p = {
+              Bucket: 'ez-react-boilerplate',
+              Key: file.Key
+            };
+            s3.deleteObject(p, function (err, data) {
+              if (err) {
+                console.log('Error ' + err);
+                callback(err);
+              } else {
+                callback();
+              }
+            })
+          }, function (err) {
+            console.log('Done deleting...');
+            cb();
+          });
+        } else {
+          console.log('Nothing to delete...');
           cb();
-        });
+        }
       })
     },
     function (cb) {

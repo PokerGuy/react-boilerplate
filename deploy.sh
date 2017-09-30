@@ -19,9 +19,6 @@ echo $currdir
 contents=$(ls)
 echo "contents of the build directory"
 echo $contents
-
-cd ..
-
 aws s3 sync . s3://sandbox.build.magickpics.com
 
 echo "Done!"

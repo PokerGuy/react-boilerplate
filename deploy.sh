@@ -1,4 +1,5 @@
 #!/bin/bash
+AWS_ENV=$1
 
 echo "Hello, world!"
 
@@ -19,6 +20,6 @@ echo $currdir
 contents=$(ls)
 echo "contents of the build directory"
 echo $contents
-aws s3 sync . s3://sandbox.build.magickpics.com
+aws s3 sync . s3://${AWS_ENV}.build.magickpics.com
 
 echo "Done!"

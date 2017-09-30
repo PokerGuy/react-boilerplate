@@ -22,4 +22,6 @@ echo $contents
 
 cd ..
 
-node copyToS3.js
+aws s3 sync . s3://sandbox.build.magickpics.com
+
+echo "Done!"

@@ -23,6 +23,7 @@ function ReposList(repos) {
         <Td column="Committer" className={status}>{repo.committer.name}</Td>
         <Td column="Start Time" className={status}>{moment.tz(repo.start_time, "America/Chicago").format('hh:mm:ss a MM/DD/YYYY')}</Td>
         <Td column="Hash" className={status}>{repo.hash.substring(0,4)}</Td>
+        <Td column="Build Details" className={status}><a href="#">Details</a></Td>
       </Tr>
     })}
     </Table>

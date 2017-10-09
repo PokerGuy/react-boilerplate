@@ -39,6 +39,23 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/build/:repo',
+      name: 'build',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Build'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/features',
       name: 'features',
       getComponent(nextState, cb) {

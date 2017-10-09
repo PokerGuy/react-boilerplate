@@ -16,7 +16,8 @@
  */
 
 import {
-  CHANGE_USERNAME,
+  LOAD_REPOS,
+  RECEIVED_REPOS,
 } from './constants';
 
 /**
@@ -26,9 +27,16 @@ import {
  *
  * @return {object}    An action object with a type of CHANGE_USERNAME
  */
-export function changeUsername(name) {
+
+export function loadRepos() {
   return {
-    type: CHANGE_USERNAME,
-    name,
-  };
+    type: LOAD_REPOS,
+  }
+}
+
+export function receivedRepos(repos) {
+  return {
+    type: RECEIVED_REPOS,
+    repos: repos,
+  }
 }

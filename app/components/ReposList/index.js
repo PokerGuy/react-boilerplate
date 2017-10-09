@@ -1,32 +1,25 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
+const moment = require('moment-timezone');
 
-import List from 'components/List';
-import ListItem from 'components/ListItem';
-import LoadingIndicator from 'components/LoadingIndicator';
-import RepoListItem from 'containers/RepoListItem';
-
-function ReposList({ loading, error, repos }) {
-  if (loading) {
-    return <List component={LoadingIndicator} />;
+function ReposList(repos) {
+  let content = (<div>Fetching Repos...</div>);
+  if (repos.repos) {
+    content = repos.repos.map(function (repo, index) {
+      return <div key={index} className="yellow">
+        &nbsp;<a href="#">{repo.repo_name}</a><br/>
+        &nbsp;Committer: {repo.committer.name}<br/>
+        &nbsp;Start Time: {moment.tz(repo.start_time, "America/Chicago").format('hh:mm:ss a MM/DD/YYYY')}<br/>
+        &nbsp;Commit Message: {repo.message}<br/>
+        &nbsp;Hash: {repo.hash.substring(0, 4)}
+      </div>
+    });
   }
-
-  if (error !== false) {
-    const ErrorComponent = () => (
-      <ListItem item={'Something went wrong, please try again!'} />
-    );
-    return <List component={ErrorComponent} />;
-  }
-
-  if (repos !== false) {
-    return <List items={repos} component={RepoListItem} />;
-  }
-
-  return null;
+  return <div>
+    {content}
+  </div>;
 }
 
 ReposList.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.any,
   repos: PropTypes.any,
 };
 

@@ -12,21 +12,19 @@
 import { fromJS } from 'immutable';
 
 import {
-  CHANGE_USERNAME,
+  LOAD_REPOS,
+  RECEIVED_REPOS,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
-  username: '',
+  repos: null,
 });
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    case CHANGE_USERNAME:
-
-      // Delete prefixed '@' from the github username
-      return state
-        .set('username', action.name.replace(/@/gi, ''));
+    case RECEIVED_REPOS:
+      return state.set('repos', action.repos);
     default:
       return state;
   }

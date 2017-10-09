@@ -4,27 +4,25 @@
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { LOAD_REPOS } from 'containers/App/constants';
-import { reposLoaded, repoLoadingError } from 'containers/App/actions';
+import { LOAD_REPOS } from './constants';
+import { receivedRepos } from './actions';
 
-import request from 'utils/request';
-import { makeSelectUsername } from 'containers/HomePage/selectors';
+const axios = require('axios');
 
-/**
- * Github repos request/response handler
- */
+function callRepos() {
+  return new Promise(function(fulfill, reject) {
+    axios.get(' https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/locks')
+      .then(function(result) {
+        fulfill(result.data)
+      }).catch(function(err) {
+        reject(err)
+    })
+  })
+}
+
 export function* getRepos() {
-  // Select username from store
-  const username = yield select(makeSelectUsername());
-  const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
-
-  try {
-    // Call our request helper (see 'utils/request')
-    const repos = yield call(request, requestURL);
-    yield put(reposLoaded(repos, username));
-  } catch (err) {
-    yield put(repoLoadingError(err));
-  }
+  const repos = yield call(callRepos);
+  yield put (receivedRepos(repos));
 }
 
 /**

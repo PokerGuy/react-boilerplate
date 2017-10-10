@@ -20,7 +20,7 @@ function BuildList(builds) {
       } else if (build.end_time === undefined && build.build_start > ((new Date).getTime() - (5 * 60 * 1000))) {
         status = "yellow";
       }
-      return <Tr key={index}>
+      return <Tr key={index} className="separating_line">
         <Td column="Repo" className={status}>{build.repo_name}</Td>
         <Td column="Committer" className={status}>{build.committer.name}</Td>
         <Td column="Message" className={status}>{build.message}</Td>

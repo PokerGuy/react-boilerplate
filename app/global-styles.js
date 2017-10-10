@@ -39,4 +39,8 @@ injectGlobal`
   .red {
     background-color: red;
   }
+  
+  tr.separating_line {
+    border-top: 1px #000 solid; /* top border only */
+  }
 `;

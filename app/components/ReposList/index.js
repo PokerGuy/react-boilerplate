@@ -19,7 +19,7 @@ function ReposList(repos) {
       } else if (repo.end_time === undefined && repo.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
         status = "yellow";
       }
-      return <Tr key={index}>
+      return <Tr key={index} className="separating_line">
         <Td column="Repo" className={status}>{repo.repo_name}</Td>
         <Td column="Committer" className={status}>{repo.committer.name}</Td>
         <Td column="Message" className={status}>{repo.message}</Td>

@@ -26,6 +26,7 @@ function ReposList(repos) {
     const columns = [{
       Header: 'Repo',
       accessor: 'repo_name',
+      filterable: true,
       Cell: row => (
         <span>
           <span style={{
@@ -37,11 +38,13 @@ function ReposList(repos) {
     },
     {
       Header: 'Committer',
-      accessor: 'committer.name'
+      accessor: 'committer.name',
+      filterable: true
     },
       {
         Header: 'Start Time',
         accessor: 'start_time',
+        filterable: true,
         Cell: row => (
           formatTime(row.value)
         )
@@ -53,6 +56,7 @@ function ReposList(repos) {
       {
         Header: 'Git Hash',
         accessor: 'hash',
+        filterable: true,
         Cell: row => (
           row.value.substring(0,6)
         )

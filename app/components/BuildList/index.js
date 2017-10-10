@@ -15,9 +15,9 @@ function BuildList(builds) {
     {builds.builds.map(function(build, index) {
       let status="green";
       console.log(build.end_time);
-      if (build.error || (build.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && build.end_time === undefined)) {
+      if (build.error || (build.build_start < ((new Date).getTime() - (5 * 60 * 1000)) && build.end_time === undefined)) {
         status = "red";
-      } else if (build.end_time === undefined && build.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
+      } else if (build.end_time === undefined && build.build_start > ((new Date).getTime() - (5 * 60 * 1000))) {
         status = "yellow";
       }
       return <Tr key={index}>

@@ -1,34 +1,33 @@
 import React, {PropTypes} from 'react';
 import { Link } from 'react-router';
-const Reactable = require('reactable');
-const Table = Reactable.Table;
-const Tr = Reactable.Tr;
-const Td = Reactable.Td;
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 const _ = require('lodash');
 const moment = require('moment-timezone');
-
+//https://react-table.js.org/#/story/cell-renderers-custom-components
 function ReposList(repos) {
   let content = (<div>Fetching Repos...</div>);
   if (repos.repos) {
-    content = <Table className="table" id="table" itemsPerPage={4} pageButtonLimit={5} sortable={['Repo', 'Committer', 'Start Time']} filterable={['Repo', 'Committer', 'Start Time', 'Hash']}>
-    {repos.repos.map(function(repo, index) {
-      let status="green";
-      console.log(repo.end_time);
-      if (repo.error || (repo.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && repo.end_time === undefined)) {
-        status = "red";
-      } else if (repo.end_time === undefined && repo.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
-        status = "yellow";
-      }
-      return <Tr key={index} className="separating_line">
-        <Td column="Repo" className={status}>{repo.repo_name}</Td>
-        <Td column="Committer" className={status}>{repo.committer.name}</Td>
-        <Td column="Message" className={status}>{repo.message}</Td>
-        <Td column="Start Time" className={status}>{moment.tz(repo.start_time, "America/Chicago").format('hh:mm:ss a MM/DD/YYYY')}</Td>
-        <Td column="Hash" className={status}>{repo.hash.substring(0,4)}</Td>
-        <Td column="Build Details" className={status}><Link to={'/build/' + repo.repo_name}>Details</Link></Td>
-      </Tr>
-    })}
-    </Table>
+    console.log(repos.repos);
+    const columns = [{
+      Header: 'Repo',
+      accessor: 'repo_name',
+      Cell: row => (
+        <div
+        style={{backgroundColor: '#85cc00'}}>
+    {row.value}
+    </div>
+      )
+    },
+    {
+      Header: 'Committer',
+      accessor: 'committer.name'
+    },
+    {
+      Header: 'Message',
+      accessor: 'message'
+    }];
+    content = <ReactTable data={repos.repos} columns={columns}/>
   }
   return <div>
     {content}

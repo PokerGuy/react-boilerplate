@@ -7,24 +7,26 @@ const Td = Reactable.Td;
 const _ = require('lodash');
 const moment = require('moment-timezone');
 
-function ReposList(repos) {
-  let content = (<div>Fetching Repos...</div>);
-  if (repos.repos) {
+function BuildList(builds) {
+  console.log(builds);
+  let content = (<div>Fetching Builds...</div>);
+  if (builds.builds) {
     content = <Table className="table" id="table" itemsPerPage={4} pageButtonLimit={5} sortable={['Repo', 'Committer', 'Start Time']} filterable={['Repo', 'Committer', 'Start Time', 'Hash']}>
-    {repos.repos.map(function(repo, index) {
+    {builds.builds.map(function(build, index) {
       let status="green";
-      console.log(repo.end_time);
-      if (repo.error || (repo.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && repo.end_time === undefined)) {
+      console.log(build.end_time);
+      if (build.error || (build.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && build.end_time === undefined)) {
         status = "red";
-      } else if (repo.end_time === undefined && repo.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
+      } else if (build.end_time === undefined && build.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
         status = "yellow";
       }
       return <Tr key={index}>
-        <Td column="Repo" className={status}>{repo.repo_name}</Td>
-        <Td column="Committer" className={status}>{repo.committer.name}</Td>
-        <Td column="Start Time" className={status}>{moment.tz(repo.start_time, "America/Chicago").format('hh:mm:ss a MM/DD/YYYY')}</Td>
-        <Td column="Hash" className={status}>{repo.hash.substring(0,4)}</Td>
-        <Td column="Build Details" className={status}><Link to={'/build/' + repo.repo_name}>Details</Link></Td>
+        <Td column="Repo" className={status}>{build.repo_name}</Td>
+        <Td column="Committer" className={status}>{build.committer.name}</Td>
+        <Td column="Message" className={status}>{build.message}</Td>
+        <Td column="Start Time" className={status}>{moment.tz(build.build_start, "America/Chicago").format('hh:mm:ss a MM/DD/YYYY')}</Td>
+        <Td column="Hash" className={status}>{build.hash.substring(0,4)}</Td>
+        <Td column="Build Details" className={status}>Placeholder</Td>
       </Tr>
     })}
     </Table>
@@ -34,8 +36,8 @@ function ReposList(repos) {
   </div>;
 }
 
-ReposList.propTypes = {
-  repos: PropTypes.any,
+BuildList.propTypes = {
+  builds: PropTypes.any,
 };
 
-export default ReposList;
+export default BuildList;

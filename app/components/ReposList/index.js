@@ -22,6 +22,7 @@ function ReposList(repos) {
       return <Tr key={index}>
         <Td column="Repo" className={status}>{repo.repo_name}</Td>
         <Td column="Committer" className={status}>{repo.committer.name}</Td>
+        <Td column="Message" className={status}>{repo.message}</Td>
         <Td column="Start Time" className={status}>{moment.tz(repo.start_time, "America/Chicago").format('hh:mm:ss a MM/DD/YYYY')}</Td>
         <Td column="Hash" className={status}>{repo.hash.substring(0,4)}</Td>
         <Td column="Build Details" className={status}><Link to={'/build/' + repo.repo_name}>Details</Link></Td>

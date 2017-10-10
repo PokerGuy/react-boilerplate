@@ -11,7 +11,7 @@ const axios = require('axios');
 
 function callRepos() {
   return new Promise(function(fulfill, reject) {
-    axios.get(' https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/locks')
+    axios.get('https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/locks')
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {

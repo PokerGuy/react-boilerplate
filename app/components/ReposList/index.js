@@ -2,21 +2,19 @@ import React, {PropTypes} from 'react';
 import { Link } from 'react-router';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-const _ = require('lodash');
 const moment = require('moment-timezone');
-//https://react-table.js.org/#/story/cell-renderers-custom-components
+
 function formatTime(time) {
   return moment.tz(time, "America/Chicago").format('MM/DD/YYYY hh:mm:ss a');
 }
 
-
 function cellColor(row) {
   if (row.original.error || (row.original.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && row.original.end_time === undefined)) {
-    return "red";
+    return <div className="red">Error</div>;
   } else if (row.original.end_time === undefined && row.original.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
-    return  "yellow";
+    return  <div className="yellow">Building</div>;
   }
-  return "green";
+  return <div className="green">Complete</div>;
 }
 
 function ReposList(repos) {
@@ -27,15 +25,14 @@ function ReposList(repos) {
       Header: 'Repo',
       accessor: 'repo_name',
       filterable: true,
-      Cell: row => (
-        <span>
-          <span style={{
-            color: cellColor(row),
-            transition: 'all .3s ease'
-    }}> &#x25cf;
-        </span>{row.value}</span>
-      )
     },
+      {
+        Header: 'Status',
+        filterable: true,
+        Cell: row => (
+          cellColor(row)
+        )
+      },
     {
       Header: 'Committer',
       accessor: 'committer.name',
@@ -81,11 +78,3 @@ ReposList.propTypes = {
 };
 
 export default ReposList;
-
-/*
-if (repo.error || (repo.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && repo.end_time === undefined)) {
-        status = "red";
-      } else if (repo.end_time === undefined && repo.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
-        status = "yellow";
-      }
- */

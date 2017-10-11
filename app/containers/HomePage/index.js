@@ -42,6 +42,8 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           ]}
         />
         <div>
+          <br/>
+          Repos <br/>
           <ReposList repos={this.props.repos} />
         </div>
       </article>

@@ -61,6 +61,28 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/build/:repo/:start',
+      name: 'build_details',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/BuildDetails/reducer'),
+          import('containers/BuildDetails/sagas'),
+          import('containers/BuildDetails'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('build_details', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/features',
       name: 'features',
       getComponent(nextState, cb) {

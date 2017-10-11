@@ -5,7 +5,8 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
   render() {
     return (
       <div>
-        <img src={Logo} /> Serverless DevOps the Easy Way
+        <img src={Logo} /> <br/>
+      Serverless DevOps the Easy Way
       </div>
     );
   }

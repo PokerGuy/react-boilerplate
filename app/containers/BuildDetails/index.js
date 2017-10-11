@@ -12,16 +12,18 @@ import {createStructuredSelector} from 'reselect';
 import BuildList from '../../components/BuildList';
 import { setRepo } from './actions';
 import { makeSelectBuilds } from './selectors';
+const moment = require('moment-timezone');
 
-export class BuildPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class BuildDetailsPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   /**
    * when initial state username is not null, submit the form to load repos
    */
   componentDidMount() {
-    this.props.setRepo(this.props.params.repo);
+    //this.props.setRepo(this.props.params.repo);
   }
 
   render() {
+    const buildTime = moment.tz(parseInt(this.props.params.start), "America/Chicago").format('MM/DD/YYYY hh:mm:ss a');
     return (
       <article>
         <Helmet
@@ -32,7 +34,7 @@ export class BuildPage extends React.PureComponent { // eslint-disable-line reac
         />
         <div>
           <br/>
-          <Link to="/">Repos</Link> / {this.props.params.repo}
+          <Link to="/">Repos</Link> / <Link to={"/build/" + this.props.params.repo}>{this.props.params.repo}</Link> / {buildTime}
           <BuildList builds={this.props.builds} />
         </div>
       </article>
@@ -40,7 +42,7 @@ export class BuildPage extends React.PureComponent { // eslint-disable-line reac
   }
 }
 
-BuildPage.propTypes = {
+BuildDetailsPage.propTypes = {
   loadRepos: React.PropTypes.func,
 };
 
@@ -55,4 +57,4 @@ const mapStateToProps = createStructuredSelector({
 });
 
 // Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(BuildPage);
+export default connect(mapStateToProps, mapDispatchToProps)(BuildDetailsPage);

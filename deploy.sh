@@ -9,7 +9,7 @@ npm install
 
 npm run build
 
-if [[ $? ne 0 ]]; then
+if [[ $? -ne 0 ]]; then
   exit 1
 else
   cd build

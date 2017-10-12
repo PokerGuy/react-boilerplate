@@ -5,13 +5,13 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
-import BuildList from '../../components/BuildList';
-import { setRepo } from './actions';
-import { makeSelectBuilds } from './selectors';
+import Details from '../../components/Details';
+import {setDetails} from './actions';
+import {makeSelectDetails} from './selectors';
 const moment = require('moment-timezone');
 
 export class BuildDetailsPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -19,7 +19,7 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
    * when initial state username is not null, submit the form to load repos
    */
   componentDidMount() {
-    //this.props.setRepo(this.props.params.repo);
+    this.props.setDetails(this.props.params.repo, this.props.params.start);
   }
 
   render() {
@@ -34,8 +34,12 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
         />
         <div>
           <br/>
-          <Link to="/">Repos</Link> / <Link to={"/build/" + this.props.params.repo}>{this.props.params.repo}</Link> / {buildTime}
-          <BuildList builds={this.props.builds} />
+          <Link to="/">Repos</Link> / <Link to={"/build/" + this.props.params.repo}>{this.props.params.repo}</Link>
+          / {buildTime}
+          <div>
+            <br/>
+            <Details details={this.props.details} />
+          </div>
         </div>
       </article>
     );
@@ -48,12 +52,12 @@ BuildDetailsPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    setRepo: (repo) => dispatch(setRepo(repo)),
+    setDetails: (repo, start) => dispatch(setDetails(repo, start)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  builds: makeSelectBuilds(),
+  details: makeSelectDetails(),
 });
 
 // Wrap the component to inject dispatch and state into it

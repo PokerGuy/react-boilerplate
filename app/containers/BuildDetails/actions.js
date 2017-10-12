@@ -16,9 +16,9 @@
  */
 
 import {
-  SET_REPO,
-  RECEIVED_BUILDS,
-  LOAD_BUILDS,
+  SET_DETAILS,
+  RECEIVED_DETAILS,
+  LOAD_DETAILS,
 } from './constants';
 
 /**
@@ -29,22 +29,23 @@ import {
  * @return {object}    An action object with a type of CHANGE_USERNAME
  */
 
-export function setRepo(repo) {
+export function setDetails(repo, start) {
   return {
-    type: SET_REPO,
+    type: SET_DETAILS,
     repo: repo,
+    start: start,
   }
 }
 
-export function loadBuilds() {
+export function loadDetails() {
   return {
-    type: LOAD_BUILDS,
+    type: LOAD_DETAILS,
   }
 }
 
-export function receivedBuilds(builds) {
+export function receivedDetails(details) {
   return {
-    type: RECEIVED_BUILDS,
-    builds: builds,
+    type: RECEIVED_DETAILS,
+    details: details,
   }
 }

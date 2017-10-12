@@ -12,26 +12,29 @@
 import { fromJS } from 'immutable';
 
 import {
-  SET_REPO,
-  LOAD_BUILDS,
-  RECEIVED_BUILDS,
+  SET_DETAILS,
+  LOAD_DETAILS,
+  RECEIVED_DETAILS,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
   repo: null,
-  builds: null,
+  start: null,
+  details: null,
 });
 
-function buildReducer(state = initialState, action) {
+function buildDetailsReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_REPO:
-      return state.set('repo', action.repo);
-    case RECEIVED_BUILDS:
-      return state.set('builds', action.builds);
+    case SET_DETAILS:
+      return state
+        .set('repo', action.repo)
+        .set('start', action.start);
+    case RECEIVED_DETAILS:
+      return state.set('details', action.details);
     default:
       return state;
   }
 }
 
-export default buildReducer;
+export default buildDetailsReducer;

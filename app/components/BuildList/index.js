@@ -29,7 +29,6 @@ function cellColor(row) {
 function BuildList(builds) {
   let content = (<div>Fetching Builds...</div>);
   if (builds.builds) {
-    console.log(builds);
     const columns = [
       {
         Header: 'Status',
@@ -45,7 +44,7 @@ function BuildList(builds) {
     },
       {
         Header: 'Start Time',
-        accessor: 'start_time',
+        accessor: 'build_start',
         filterable: true,
         Cell: row => (
           formatTime(row.value)

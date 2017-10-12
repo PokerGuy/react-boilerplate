@@ -9,6 +9,6 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const SET_REPO = 'boilerplate/Build/SET_REPO';
-export const LOAD_BUILDS = 'boilerplate/Build/LOAD_BUILDS';
-export const RECEIVED_BUILDS = 'boilerplate/Build/RECEIVED_BUILDS';
+export const SET_DETAILS = 'boilerplate/BuildDetails/SET_DETAILS';
+export const LOAD_DETAILS = 'boilerplate/BuildDetails/LOAD_DETAILS';
+export const RECEIVED_DETAILS = 'boilerplate/BuildDetails/RECEIVED_DETAILS';

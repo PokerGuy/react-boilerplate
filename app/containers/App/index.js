@@ -10,7 +10,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 
-import Header from 'components/Header';
+import Header from '../Header';
 import Footer from 'components/Footer';
 import withProgressBar from 'components/ProgressBar';
 
@@ -27,8 +27,8 @@ export function App(props) {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
+        titleTemplate="%s"
+        defaultTitle="Build Board"
         meta={[
           { name: 'description', content: 'A React.js Boilerplate application' },
         ]}

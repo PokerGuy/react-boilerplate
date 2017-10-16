@@ -12,3 +12,4 @@
 export const SET_DETAILS = 'boilerplate/BuildDetails/SET_DETAILS';
 export const LOAD_DETAILS = 'boilerplate/BuildDetails/LOAD_DETAILS';
 export const RECEIVED_DETAILS = 'boilerplate/BuildDetails/RECEIVED_DETAILS';
+export const CLEAR_DETAILS = 'boilerplate/BuildDetails/CLEAR_DETAILS';

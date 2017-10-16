@@ -15,6 +15,7 @@ import {
   SET_DETAILS,
   LOAD_DETAILS,
   RECEIVED_DETAILS,
+  CLEAR_DETAILS,
 } from './constants';
 
 // The initial state of the App
@@ -32,6 +33,9 @@ function buildDetailsReducer(state = initialState, action) {
         .set('start', action.start);
     case RECEIVED_DETAILS:
       return state.set('details', action.details);
+    case CLEAR_DETAILS:
+      return state
+        .set('details', null);
     default:
       return state;
   }

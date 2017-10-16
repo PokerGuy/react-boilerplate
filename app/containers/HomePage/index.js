@@ -31,14 +31,12 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   render() {
-    const repos = this.props.repos;
-
     return (
       <article>
         <Helmet
-          title="Home Page"
+          title="Repos"
           meta={[
-            {name: 'description', content: 'A React.js Boilerplate application homepage'},
+            {name: 'description', content: 'Status of Repos'},
           ]}
         />
         <div>

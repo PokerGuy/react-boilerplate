@@ -23,18 +23,18 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
   }
 
   render() {
-    const buildTime = moment.tz(parseInt(this.props.querystringParams.start), 'America/Chicago').format('MM/DD/YYYY hh:mm:ss a');
+    const buildTime = moment.tz(parseInt(this.props.repo.start), 'America/Chicago').format('MM/DD/YYYY hh:mm:ss a');
     return (
       <article>
         <Helmet
-          title="Home Page"
+          title="Build Details"
           meta={[
-            { name: 'description', content: 'A React.js Boilerplate application homepage' },
+            { name: 'description', content: 'Build Details' },
           ]}
         />
         <div>
           <br />
-          <Link to="/">Repos</Link> / <Link to={"/build/" + this.props.querystringParams.repo}>{this.props.querystringParams.repo}</Link>
+          <Link to="/">Repos</Link> / <Link to={"/build/" + this.props.repo.repo}>{this.props.repo.repo}</Link>
           / {buildTime}
           <div>
             <br />
@@ -49,6 +49,7 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
 BuildDetailsPage.propTypes = {
   setDetails: React.PropTypes.func,
   details: React.PropTypes.array,
+  repo: React.PropTypes.object,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -60,6 +61,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   details: makeSelectDetails(),
   querystringParams: makeSelectRepo(),
+  repo: makeSelectRepo(),
 });
 
 // Wrap the component to inject dispatch and state into it

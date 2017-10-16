@@ -5,7 +5,7 @@
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_DETAILS } from './constants';
-import { receivedDetails } from './actions';
+import { receivedDetails, clearDetails } from './actions';
 import { makeSelectRepo } from './selectors'
 
 const axios = require('axios');
@@ -22,6 +22,7 @@ function callBuilds(repo, start) {
 }
 
 export function* getDetails() {
+  yield put(clearDetails());
   const repo = yield select(makeSelectRepo());
   const details = yield call(callBuilds, repo.repo, repo.start);
   yield put(receivedDetails(details));

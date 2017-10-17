@@ -12,19 +12,22 @@
 import { fromJS } from 'immutable';
 
 import {
-  LOAD_REPOS,
   RECEIVED_REPOS,
+  SET_CREDENTIALS,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
   repos: null,
+  credentials: null,
 });
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case RECEIVED_REPOS:
       return state.set('repos', action.repos);
+    case SET_CREDENTIALS:
+      return state.set('credentials', action.credentials);
     default:
       return state;
   }

@@ -19,18 +19,56 @@ import Form from './Form';
 import Input from './Input';
 import Section from './Section';
 import messages from './messages';
-import {loadRepos} from './actions';
-import {makeSelectRepos} from './selectors';
+import {loadRepos, getCredentials, setCredentials} from './actions';
+import {makeSelectRepos, makeSelectCredentials} from './selectors';
+const awsIot = require('aws-iot-device-sdk');
+let client;
 
+function onConnect() {
+  console.log('connected');
+  client.subscribe('derp/#');
+  console.log(client);
+}
+
+function onMessage(topic, message) {
+  const string = new TextDecoder().decode(message);
+  console.log(string);
+  console.log(message);
+}
+
+function onClose() {
+  console.log('Buh Bye');
+}
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   /**
    * when initial state username is not null, submit the form to load repos
    */
   componentDidMount() {
     this.props.loadRepos();
+    if (localStorage.credentials) {
+      this.props.setCredentials(localStorage.credentials);
+    } else {
+      this.props.getCredentials();
+    }
   }
 
   render() {
+    if (this.props.credentials) {
+      console.log('Got credentials');
+      client = awsIot.device({
+        region: this.props.credentials.region,
+        protocol: 'wss',
+        accessKeyId: this.props.credentials.accessKey,
+        secretKey: this.props.credentials.secretKey,
+        sessionToken: this.props.credentials.sessionToken,
+        port: 443,
+        host: this.props.credentials.iotEndpoint
+      });
+
+      client.on('connect', onConnect);
+      client.on('message', onMessage);
+      client.on('close', onClose);
+    }
     return (
       <article>
         <Helmet
@@ -56,11 +94,14 @@ HomePage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     loadRepos: (evt) => dispatch(loadRepos()),
+    getCredentials: (evt) => dispatch(getCredentials()),
+    setCredentials: (evt) => dispatch(setCredentials(evt)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
+  credentials: makeSelectCredentials(),
 });
 
 // Wrap the component to inject dispatch and state into it

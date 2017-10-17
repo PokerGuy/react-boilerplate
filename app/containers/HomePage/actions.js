@@ -18,6 +18,8 @@
 import {
   LOAD_REPOS,
   RECEIVED_REPOS,
+  GET_CREDENTIALS,
+  SET_CREDENTIALS,
 } from './constants';
 
 /**
@@ -31,12 +33,26 @@ import {
 export function loadRepos() {
   return {
     type: LOAD_REPOS,
-  }
+  };
 }
 
 export function receivedRepos(repos) {
   return {
     type: RECEIVED_REPOS,
     repos: repos,
-  }
+  };
+}
+
+export function getCredentials(creds) {
+  return {
+    type: GET_CREDENTIALS,
+    credentials: creds,
+  };
+}
+
+export function setCredentials(creds) {
+  return {
+    type: SET_CREDENTIALS,
+    credentials: creds,
+  };
 }

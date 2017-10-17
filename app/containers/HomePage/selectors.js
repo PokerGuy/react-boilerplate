@@ -11,7 +11,13 @@ const makeSelectRepos = () => createSelector(
   (homeState) => homeState.get('repos')
 );
 
+const makeSelectCredentials = () => createSelector(
+  selectHome,
+  (homeState) => homeState.get('credentials')
+);
+
 export {
   selectHome,
   makeSelectRepos,
+  makeSelectCredentials,
 };

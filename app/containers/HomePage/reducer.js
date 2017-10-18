@@ -27,11 +27,7 @@ const initialState = fromJS({
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case NEW_REPO:
-      console.log(action.repo);
-      return {
-        ...state,
-        repos: [...state.repos, action.repo],
-      };
+      return state.set('repos', [...state.get('repos'), action.repo]);
     case RECEIVED_REPOS:
       return state.set('repos', action.repos);
     case SET_CREDENTIALS:

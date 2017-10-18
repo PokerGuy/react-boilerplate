@@ -29,7 +29,6 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   componentDidMount() {
     this.props.loadRepos();
     if (localStorage.credentials) {
-      console.log('Already have credentials');
       this.props.setCredentials(JSON.parse(localStorage.credentials));
     } else {
       this.props.getCredentials();
@@ -37,11 +36,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   render() {
-    console.log(this.props.repos);
     if (this.props.credentials && !client) {
-      console.log('Got credentials');
-      console.log(this.props.credentials);
-      console.log(this.props.credentials.region);
       client = awsIot.device({
         region: this.props.credentials.region,
         protocol: 'wss',
@@ -57,18 +52,15 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
       });
       client.on('message', (topic, message) => {
         const string = new TextDecoder().decode(message);
-        console.log(JSON.parse(string));
         const msg = JSON.parse(string);
         if (msg.type === 'new') {
-          console.log('dispatching...');
           this.props.newRepo(msg.payload);
-        }``
+        }
       });
       client.on('close', () => {
         console.log('Bye... Maybe I should change a prop to show disconnected');
       });
       client.on('error', (error) => {
-        console.log('oh, snap! error');
         console.log(error);
         client = null;
         this.props.getCredentials();

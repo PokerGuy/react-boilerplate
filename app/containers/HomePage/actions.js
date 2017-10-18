@@ -60,7 +60,6 @@ export function setCredentials(creds) {
 }
 
 export function newRepo(repo) {
-  console.log('in the action');
   return {
     type: NEW_REPO,
     repo: repo,
@@ -68,7 +67,6 @@ export function newRepo(repo) {
 }
 
 export function updateRepo(repo) {
-  console.log(repo);
   return {
     type: UPDATE_REPO,
     repo: repo,

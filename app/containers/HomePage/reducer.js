@@ -27,6 +27,7 @@ function homeReducer(state = initialState, action) {
     case RECEIVED_REPOS:
       return state.set('repos', action.repos);
     case SET_CREDENTIALS:
+      localStorage.credentials = JSON.stringify(action.credentials);
       return state.set('credentials', action.credentials);
     default:
       return state;

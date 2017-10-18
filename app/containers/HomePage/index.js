@@ -32,7 +32,7 @@ function onConnect() {
 
 function onMessage(topic, message) {
   const string = new TextDecoder().decode(message);
-  console.log(string);
+  console.log(JSON.parse(string));
   console.log(message);
 }
 
@@ -46,16 +46,19 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   componentDidMount() {
     this.props.loadRepos();
     if (localStorage.credentials) {
-      this.props.setCredentials(localStorage.credentials);
+      console.log('Already have credentials');
+      this.props.setCredentials(JSON.parse(localStorage.credentials));
     } else {
       this.props.getCredentials();
     }
   }
 
   render() {
-    if (this.props.credentials) {
+    if (this.props.credentials && !client) {
       console.log('Got credentials');
-      client = awsIot.device({
+      console.log(this.props.credentials);
+      console.log(this.props.credentials.region);
+      /* client = awsIot.device({
         region: this.props.credentials.region,
         protocol: 'wss',
         accessKeyId: this.props.credentials.accessKey,
@@ -63,11 +66,20 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         sessionToken: this.props.credentials.sessionToken,
         port: 443,
         host: this.props.credentials.iotEndpoint
-      });
-
-      client.on('connect', onConnect);
-      client.on('message', onMessage);
-      client.on('close', onClose);
+      }); */
+      try {
+        client = awsIot.device({
+          region: this.props.credentials.region,
+          protocol: 'wss',
+          accessKeyId: 'derp',
+          secretKey: this.props.credentials.secretKey,
+          sessionToken: this.props.credentials.sessionToken,
+          port: 443,
+          host: this.props.credentials.iotEndpoint
+        });
+      } catch(err) {
+        console.log(err);
+      }
     }
     return (
       <article>

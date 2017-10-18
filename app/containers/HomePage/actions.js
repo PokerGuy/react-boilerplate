@@ -20,6 +20,8 @@ import {
   RECEIVED_REPOS,
   GET_CREDENTIALS,
   SET_CREDENTIALS,
+  NEW_REPO,
+  UPDATE_REPO,
 } from './constants';
 
 /**
@@ -54,5 +56,21 @@ export function setCredentials(creds) {
   return {
     type: SET_CREDENTIALS,
     credentials: creds,
+  };
+}
+
+export function newRepo(repo) {
+  console.log('in the action');
+  return {
+    type: NEW_REPO,
+    repo: repo,
+  };
+}
+
+export function updateRepo(repo) {
+  console.log(repo);
+  return {
+    type: UPDATE_REPO,
+    repo: repo,
   };
 }

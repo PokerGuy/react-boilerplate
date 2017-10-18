@@ -20,6 +20,8 @@ function cellColor(row) {
 function ReposList(repos) {
   let content = (<div>Fetching Repos...</div>);
   if (repos.repos) {
+    console.log('in the repos list');
+    console.log(repos.repos);
     const columns = [{
       Header: 'Repo',
       accessor: 'repo_name',

@@ -13,3 +13,5 @@ export const LOAD_REPOS = 'boilerplate/Home/LOAD_REPOS';
 export const RECEIVED_REPOS = 'boilerplate/Home/RECEIVED_REPOS';
 export const GET_CREDENTIALS = 'boilerplate/Home/GET_CREDENTIALS';
 export const SET_CREDENTIALS = 'boilerplate/Home/SET_CREDENTIALS';
+export const NEW_REPO = 'boilerplate/Home/NEW_REPO';
+export const UPDATE_REPO = 'boilerplate/Home/UPDATE_REPO';

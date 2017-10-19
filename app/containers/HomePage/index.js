@@ -17,8 +17,8 @@ import Form from './Form';
 import Input from './Input';
 import Section from './Section';
 import messages from './messages';
-import { loadRepos, getCredentials, setCredentials, newRepo } from './actions';
-import { makeSelectRepos, makeSelectCredentials } from './selectors';
+import { loadRepos, getCredentials, setCredentials, newRepo, connected, disconnected, updateRepo } from './actions';
+import { makeSelectRepos, makeSelectCredentials, makeSelectConnected } from './selectors';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 
@@ -35,6 +35,10 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
     }
   }
 
+  componentWillUnmount() {
+    client = null;
+  }
+
   render() {
     if (this.props.credentials && !client) {
       client = awsIot.device({
@@ -47,7 +51,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         host: this.props.credentials.iotEndpoint,
       });
       client.on('connect', () => {
-        console.log('Connected... Maybe I should change a prop to show connected somewhere???');
+        this.props.connected();
         client.subscribe('repos');
       });
       client.on('message', (topic, message) => {
@@ -55,16 +59,25 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         const msg = JSON.parse(string);
         if (msg.type === 'new') {
           this.props.newRepo(msg.payload);
+        } else if (msg.type === 'update') {
+          this.props.updateRepo(msg.payload);
         }
       });
       client.on('close', () => {
-        console.log('Bye... Maybe I should change a prop to show disconnected');
+        console.log('Bye...');
+        this.props.disconnected();
       });
       client.on('error', (error) => {
         console.log(error);
         client = null;
         this.props.getCredentials();
+        this.props.disconnected();
       });
+    }
+
+    let connStatus = <div>Disconnected: Repos</div>
+    if (this.props.connectStatus) {
+      connStatus = <div>Connected: Repos</div>
     }
     return (
       <article>
@@ -76,7 +89,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         />
         <div>
           <br />
-          Repos <br />
+          {connStatus} <br />
           <ReposList repos={this.props.repos} />
         </div>
       </article>
@@ -87,9 +100,14 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 HomePage.propTypes = {
   loadRepos: React.PropTypes.func,
   credentials: React.PropTypes.object,
+  repos: React.PropTypes.array,
   getCredentials: React.PropTypes.func,
   setCredentials: React.PropTypes.func,
   newRepo: React.PropTypes.func,
+  connectStatus: React.PropTypes.bool,
+  connected: React.PropTypes.func,
+  disconnected: React.PropTypes.func,
+  updateRepo: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -98,12 +116,16 @@ export function mapDispatchToProps(dispatch) {
     getCredentials: () => dispatch(getCredentials()),
     setCredentials: (evt) => dispatch(setCredentials(evt)),
     newRepo: (evt) => dispatch(newRepo(evt)),
+    connected: () => dispatch(connected()),
+    disconnected: () => dispatch(disconnected()),
+    updateRepo: (repo) => dispatch(updateRepo(repo)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
   credentials: makeSelectCredentials(),
+  connectStatus: makeSelectConnected(),
 });
 
 // Wrap the component to inject dispatch and state into it

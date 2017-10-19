@@ -22,6 +22,8 @@ import {
   SET_CREDENTIALS,
   NEW_REPO,
   UPDATE_REPO,
+  CONNECTED,
+  DISCONNECTED,
 } from './constants';
 
 /**
@@ -71,4 +73,16 @@ export function updateRepo(repo) {
     type: UPDATE_REPO,
     repo: repo,
   };
+}
+
+export function connected() {
+  return {
+    type: CONNECTED,
+  }
+}
+
+export function disconnected() {
+  return {
+    type: DISCONNECTED,
+  }
 }

@@ -16,8 +16,14 @@ const makeSelectCredentials = () => createSelector(
   (homeState) => homeState.get('credentials')
 );
 
+const makeSelectConnected = () => createSelector(
+  selectHome,
+  (homeState) => homeState.get('connected')
+);
+
 export {
   selectHome,
   makeSelectRepos,
   makeSelectCredentials,
+  makeSelectConnected,
 };

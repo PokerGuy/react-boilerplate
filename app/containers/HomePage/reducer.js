@@ -16,12 +16,15 @@ import {
   SET_CREDENTIALS,
   NEW_REPO,
   UPDATE_REPO,
+  CONNECTED,
+  DISCONNECTED,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
   repos: null,
   credentials: null,
+  connected: false,
 });
 
 function homeReducer(state = initialState, action) {
@@ -33,6 +36,19 @@ function homeReducer(state = initialState, action) {
     case SET_CREDENTIALS:
       localStorage.credentials = JSON.stringify(action.credentials);
       return state.set('credentials', action.credentials);
+    case CONNECTED:
+      return state.set('connected', true);
+    case DISCONNECTED:
+      return state.set('connected', false);
+    case UPDATE_REPO:
+      const update = state.get('repos').map(function(repo) {
+        if (repo.repo_name === action.repo.repo_name) {
+          return action.repo;
+        } else {
+          return repo;
+        }
+      });
+      return state.set('repos', update);
     default:
       return state;
   }

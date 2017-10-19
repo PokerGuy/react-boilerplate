@@ -36,7 +36,10 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   componentWillUnmount() {
-    client = null;
+    client.end(function () {
+      console.log('disconnected for good...');
+      client = null;
+    })
   }
 
   render() {

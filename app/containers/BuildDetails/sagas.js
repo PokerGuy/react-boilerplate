@@ -11,8 +11,10 @@ import { makeSelectRepo } from './selectors'
 const axios = require('axios');
 
 function callBuilds(repo, start) {
+  console.log(repo);
+  console.log(start);
   return new Promise(function(fulfill, reject) {
-    axios.get('https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/build/' + repo + '/' + start)
+    axios.get('https://sandbox.api.magickpics.com/build/' + repo + '/' + start)
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {

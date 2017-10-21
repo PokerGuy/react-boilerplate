@@ -21,6 +21,7 @@ import {
 const initialState = fromJS({
   repo: null,
   builds: null,
+  connected: false,
 });
 
 function buildReducer(state = initialState, action) {

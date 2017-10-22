@@ -18,12 +18,8 @@
 import {
   LOAD_REPOS,
   RECEIVED_REPOS,
-  GET_CREDENTIALS,
-  SET_CREDENTIALS,
   NEW_REPO,
   UPDATE_REPO,
-  CONNECTED,
-  DISCONNECTED,
 } from './constants';
 
 /**
@@ -47,20 +43,6 @@ export function receivedRepos(repos) {
   };
 }
 
-export function getCredentials(creds) {
-  return {
-    type: GET_CREDENTIALS,
-    credentials: creds,
-  };
-}
-
-export function setCredentials(creds) {
-  return {
-    type: SET_CREDENTIALS,
-    credentials: creds,
-  };
-}
-
 export function newRepo(repo) {
   return {
     type: NEW_REPO,
@@ -73,16 +55,4 @@ export function updateRepo(repo) {
     type: UPDATE_REPO,
     repo: repo,
   };
-}
-
-export function connected() {
-  return {
-    type: CONNECTED,
-  }
-}
-
-export function disconnected() {
-  return {
-    type: DISCONNECTED,
-  }
 }

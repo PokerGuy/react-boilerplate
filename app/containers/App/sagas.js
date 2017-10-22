@@ -4,35 +4,44 @@
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { LOAD_REPOS, GET_CREDENTIALS } from './constants';
-import { receivedRepos, setCredentials } from './actions';
+import { GET_CLIENT } from './constants';
+import { setClient } from './actions';
 
 const axios = require('axios');
 
-function callRepos() {
+function callCreds() {
   return new Promise(function(fulfill, reject) {
-    axios.get('https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/locks')
+    axios.get('https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/iot')
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {
-        reject(err)
+      reject(err)
     })
   })
 }
 
-function* getRepos() {
-  const repos = yield call(callRepos);
-  yield put (receivedRepos(repos));
+function* checkCredentials() {
+  if (localStorage.credentials) {
+    yield put(setClient(JSON.parse(localStorage.credentials)));
+  } else {
+    const creds = yield callCreds();
+    localStorage.credentials = JSON.stringify(creds);
+    yield put(setClient(creds));
+  }
+}
+
+function* doTest() {
+  yield put(test());
 }
 
 /**
  * Root saga manages watcher lifecycle
  */
-export function* githubData() {
+export function* globalSaga() {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
-  const watcher = yield takeLatest(LOAD_REPOS, getRepos);
+  const watcher = yield takeLatest(GET_CLIENT, checkCredentials);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
@@ -41,5 +50,5 @@ export function* githubData() {
 
 // Bootstrap sagas
 export default [
-  githubData,
+  globalSaga,
 ];

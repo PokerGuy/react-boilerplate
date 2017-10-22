@@ -13,11 +13,8 @@ import { fromJS } from 'immutable';
 
 import {
   RECEIVED_REPOS,
-  SET_CREDENTIALS,
   NEW_REPO,
   UPDATE_REPO,
-  CONNECTED,
-  DISCONNECTED,
 } from './constants';
 
 // The initial state of the App
@@ -33,13 +30,6 @@ function homeReducer(state = initialState, action) {
       return state.set('repos', [...state.get('repos'), action.repo]);
     case RECEIVED_REPOS:
       return state.set('repos', action.repos);
-    case SET_CREDENTIALS:
-      localStorage.credentials = JSON.stringify(action.credentials);
-      return state.set('credentials', action.credentials);
-    case CONNECTED:
-      return state.set('connected', true);
-    case DISCONNECTED:
-      return state.set('connected', false);
     case UPDATE_REPO:
       const update = state.get('repos').map(function(repo) {
         if (repo.repo_name === action.repo.repo_name) {

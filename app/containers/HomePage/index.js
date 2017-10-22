@@ -9,16 +9,11 @@ import Helmet from 'react-helmet';
 import {FormattedMessage} from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import H2 from 'components/H2';
 import ReposList from '../../components/ReposList';
-import AtPrefix from './AtPrefix';
-import CenteredSection from './CenteredSection';
-import Form from './Form';
-import Input from './Input';
-import Section from './Section';
-import messages from './messages';
-import { loadRepos, getCredentials, setCredentials, newRepo, connected, disconnected, updateRepo } from './actions';
-import { makeSelectRepos, makeSelectCredentials, makeSelectConnected } from './selectors';
+import { loadRepos, newRepo, updateRepo } from './actions';
+import { makeSelectRepos } from './selectors';
+import { makeSelectClient, makeSelectConnected } from '../App/selectors';
+import { getClient, connected, disconnected } from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 
@@ -28,36 +23,29 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
    */
   componentDidMount() {
     this.props.loadRepos();
-    if (localStorage.credentials) {
-      this.props.setCredentials(JSON.parse(localStorage.credentials));
+    if (this.props.client) {
+      console.log('Already have a client...');
     } else {
-      this.props.getCredentials();
+      console.log('need to get a client');
+      this.props.getClient();
     }
   }
 
   componentWillUnmount() {
-    client.end(function () {
-      console.log('disconnected for good...');
-      client = null;
-    })
+    // Unsubscribe here...
   }
 
   render() {
-    if (this.props.credentials && !client) {
-      client = awsIot.device({
-        region: this.props.credentials.region,
-        protocol: 'wss',
-        accessKeyId: this.props.credentials.accessKey,
-        secretKey: this.props.credentials.secretKey,
-        sessionToken: this.props.credentials.sessionToken,
-        port: 443,
-        host: this.props.credentials.iotEndpoint,
-      });
-      client.on('connect', () => {
+    if (this.props.client) {
+      console.log('got a client!');
+
+      this.props.client.on('connect', () => {
+        console.log('connected');
         this.props.connected();
-        client.subscribe('repos');
+        this.props.client.subscribe('repos');
       });
-      client.on('message', (topic, message) => {
+
+      this.props.client.on('message', (topic, message) => {
         const string = new TextDecoder().decode(message);
         const msg = JSON.parse(string);
         if (msg.type === 'new') {
@@ -66,14 +54,16 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           this.props.updateRepo(msg.payload);
         }
       });
-      client.on('close', () => {
+
+      this.props.client.on('close', () => {
         console.log('Bye...');
         this.props.disconnected();
       });
-      client.on('error', (error) => {
+
+      this.props.client.on('error', (error) => {
         console.log(error);
-        client = null;
-        this.props.getCredentials();
+        localStorage.removeItem('credentials');
+        this.props.getClient();
         this.props.disconnected();
       });
     }
@@ -116,19 +106,18 @@ HomePage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     loadRepos: () => dispatch(loadRepos()),
-    getCredentials: () => dispatch(getCredentials()),
-    setCredentials: (evt) => dispatch(setCredentials(evt)),
     newRepo: (evt) => dispatch(newRepo(evt)),
     connected: () => dispatch(connected()),
     disconnected: () => dispatch(disconnected()),
     updateRepo: (repo) => dispatch(updateRepo(repo)),
+    getClient: () => dispatch(getClient()),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
-  credentials: makeSelectCredentials(),
   connectStatus: makeSelectConnected(),
+  client: makeSelectClient(),
 });
 
 // Wrap the component to inject dispatch and state into it

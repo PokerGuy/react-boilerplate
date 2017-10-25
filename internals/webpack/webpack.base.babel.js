@@ -11,6 +11,10 @@ module.exports = (options) => ({
     path: path.resolve(process.cwd(), 'build'),
     publicPath: '/',
   }, options.output), // Merge with env dependent settings
+  node: {
+    fs: 'empty',
+    tls: 'empty'
+  },
   module: {
     loaders: [{
       test: /\.js$/, // Transform all .js files required somewhere with Babel
@@ -72,6 +76,7 @@ module.exports = (options) => ({
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        API_URL: JSON.stringify(process.env.API_URL),
       },
     }),
     new webpack.NamedModulesPlugin(),
@@ -88,6 +93,7 @@ module.exports = (options) => ({
       'jsnext:main',
       'main',
     ],
+    alias: { moment: 'moment/moment.js'},
   },
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window

@@ -16,10 +16,11 @@
  */
 
 import {
-  LOAD_REPOS,
-  RECEIVED_REPOS,
-  NEW_REPO,
-  UPDATE_REPO,
+  SET_DETAILS,
+  RECEIVED_DETAILS,
+  LOAD_DETAILS,
+  CLEAR_DETAILS,
+  NEW_DETAIL,
 } from './constants';
 
 /**
@@ -30,29 +31,36 @@ import {
  * @return {object}    An action object with a type of CHANGE_USERNAME
  */
 
-export function loadRepos() {
+export function setDetails(repo, start) {
   return {
-    type: LOAD_REPOS,
-  };
-}
-
-export function receivedRepos(repos) {
-  return {
-    type: RECEIVED_REPOS,
-    repos: repos,
-  };
-}
-
-export function newRepo(repo) {
-  return {
-    type: NEW_REPO,
+    type: SET_DETAILS,
     repo: repo,
-  };
+    start: start,
+  }
 }
 
-export function updateRepo(repo) {
+export function loadDetails() {
   return {
-    type: UPDATE_REPO,
-    repo: repo,
-  };
+    type: LOAD_DETAILS,
+  }
+}
+
+export function receivedDetails(details) {
+  return {
+    type: RECEIVED_DETAILS,
+    details: details,
+  }
+}
+
+export function clearDetails() {
+  return {
+    type: CLEAR_DETAILS,
+  }
+}
+
+export function newDetail(detail) {
+  return {
+    type: NEW_DETAIL,
+    detail: detail,
+  }
 }

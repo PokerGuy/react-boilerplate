@@ -1,27 +1,22 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- */
-
 import React from 'react';
+import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
-import ReposList from '../../components/ReposList';
-import {loadRepos, newRepo, updateRepo} from './actions';
-import {makeSelectRepos} from './selectors';
+import BuildList from '../../components/BuildList';
+import { setRepo, updateBuild, newBuild } from './actions';
+import { makeSelectBuilds } from './selectors';
 import {makeSelectConnected, makeSelectCredentials} from '../App/selectors';
 import {getCredentials, setConnection} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 
-export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class BuildPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   /**
    * when initial state username is not null, submit the form to load repos
    */
   componentDidMount() {
-    this.props.loadRepos();
+    this.props.setRepo(this.props.params.repo);
     this.props.setConnection('disconnected');
   }
 
@@ -50,7 +45,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         });
         client.on('connect', () => {
           console.log('CONNECTED!!');
-          client.subscribe('repos');
+          client.subscribe('repos/' + this.props.params.repo);
           this.props.setConnection('connected');
         });
 
@@ -59,9 +54,9 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           const msg = JSON.parse(string);
           console.log(msg);
           if (msg.type === 'new') {
-            this.props.newRepo(msg.payload);
+            this.props.newBuild(msg.payload);
           } else if (msg.type === 'update') {
-            this.props.updateRepo(msg.payload);
+            this.props.updateBuild(msg.payload);
           }
         });
 
@@ -91,55 +86,53 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
     }
   }
 
+
   render() {
-    let connStatus = <div>Disconnected: Repos</div>;
-    if (this.props.connectStatus === 'connected') {
-      connStatus = <div>Connected: Repos</div>
-    }
     return (
       <article>
         <Helmet
-          title="Repos"
+          title="Builds"
           meta={[
-            {name: 'description', content: 'Status of Repos'},
+            {name: 'description', content: 'Build Status'},
           ]}
         />
         <div>
-          <br />
-          {connStatus} <br />
-          <ReposList repos={this.props.repos}/>
+          <br/>
+          <Link to="/">Repos</Link> / {this.props.params.repo}
+          <BuildList builds={this.props.builds} />
         </div>
       </article>
     );
   }
 }
 
-HomePage.propTypes = {
+BuildPage.propTypes = {
   loadRepos: React.PropTypes.func,
-  credentials: React.PropTypes.object,
-  repos: React.PropTypes.array,
+  setRepo: React.PropTypes.func,
+  setConnection: React.PropTypes.func,
   getCredentials: React.PropTypes.func,
-  setCredentials: React.PropTypes.func,
-  newRepo: React.PropTypes.func,
+  builds: React.PropTypes.array,
   connectStatus: React.PropTypes.string,
-  updateRepo: React.PropTypes.func,
+  credentials: React.PropTypes.object,
+  updateBuild: React.PropTypes.func,
+  newBuild: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    loadRepos: () => dispatch(loadRepos()),
-    newRepo: (evt) => dispatch(newRepo(evt)),
-    updateRepo: (repo) => dispatch(updateRepo(repo)),
+    setRepo: (repo) => dispatch(setRepo(repo)),
     setConnection: (status) => dispatch(setConnection(status)),
     getCredentials: () => dispatch(getCredentials()),
+    updateBuild: (build) => dispatch(updateBuild(build)),
+    newBuild: (build) => dispatch(newBuild(build)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  repos: makeSelectRepos(),
+  builds: makeSelectBuilds(),
   connectStatus: makeSelectConnected(),
   credentials: makeSelectCredentials(),
 });
 
 // Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(BuildPage);

@@ -4,14 +4,18 @@
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { LOAD_REPOS } from './constants';
-import { receivedRepos } from './actions';
+import { SET_DETAILS } from './constants';
+import { receivedDetails, clearDetails } from './actions';
+import { makeSelectRepo } from './selectors';
 const api_url = process.env.API_URL || 'https://sandbox.api.magickpics.com';
+
 const axios = require('axios');
 
-function callRepos() {
+function callBuilds(repo, start) {
+  console.log(repo);
+  console.log(start);
   return new Promise(function(fulfill, reject) {
-    axios.get(api_url + '/locks')
+    axios.get(api_url + '/build/' + repo + '/' + start)
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {
@@ -20,19 +24,21 @@ function callRepos() {
   })
 }
 
-function* getRepos() {
-  const repos = yield call(callRepos);
-  yield put (receivedRepos(repos));
+export function* getDetails() {
+  yield put(clearDetails());
+  const repo = yield select(makeSelectRepo());
+  const details = yield call(callBuilds, repo.repo, repo.start);
+  yield put(receivedDetails(details));
 }
 
 /**
  * Root saga manages watcher lifecycle
  */
-export function* githubData() {
+export function* buildDetailsData() {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
-  const watcher = yield takeLatest(LOAD_REPOS, getRepos);
+  const watcher = yield takeLatest(SET_DETAILS, getDetails);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
@@ -41,5 +47,5 @@ export function* githubData() {
 
 // Bootstrap sagas
 export default [
-  githubData,
+  buildDetailsData,
 ];

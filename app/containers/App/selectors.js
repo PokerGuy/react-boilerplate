@@ -6,24 +6,14 @@ import { createSelector } from 'reselect';
 
 const selectGlobal = (state) => state.get('global');
 
-const makeSelectCurrentUser = () => createSelector(
+const makeSelectConnected = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentUser')
+  (globalState) => globalState.get('connected')
 );
 
-const makeSelectLoading = () => createSelector(
+const makeSelectCredentials = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('loading')
-);
-
-const makeSelectError = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('error')
-);
-
-const makeSelectRepos = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.getIn(['userData', 'repositories'])
+  (globalState) => globalState.get('credentials')
 );
 
 const makeSelectLocationState = () => {
@@ -44,9 +34,7 @@ const makeSelectLocationState = () => {
 
 export {
   selectGlobal,
-  makeSelectCurrentUser,
-  makeSelectLoading,
-  makeSelectError,
-  makeSelectRepos,
+  makeSelectConnected,
+  makeSelectCredentials,
   makeSelectLocationState,
 };

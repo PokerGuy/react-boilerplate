@@ -16,10 +16,11 @@
  */
 
 import {
-  LOAD_REPOS,
-  RECEIVED_REPOS,
-  NEW_REPO,
-  UPDATE_REPO,
+  SET_REPO,
+  RECEIVED_BUILDS,
+  LOAD_BUILDS,
+  NEW_BUILD,
+  UPDATE_BUILD,
 } from './constants';
 
 /**
@@ -30,29 +31,36 @@ import {
  * @return {object}    An action object with a type of CHANGE_USERNAME
  */
 
-export function loadRepos() {
+export function setRepo(repo) {
   return {
-    type: LOAD_REPOS,
-  };
-}
-
-export function receivedRepos(repos) {
-  return {
-    type: RECEIVED_REPOS,
-    repos: repos,
-  };
-}
-
-export function newRepo(repo) {
-  return {
-    type: NEW_REPO,
+    type: SET_REPO,
     repo: repo,
-  };
+  }
 }
 
-export function updateRepo(repo) {
+export function loadBuilds() {
   return {
-    type: UPDATE_REPO,
-    repo: repo,
-  };
+    type: LOAD_BUILDS,
+  }
+}
+
+export function receivedBuilds(builds) {
+  return {
+    type: RECEIVED_BUILDS,
+    builds: builds,
+  }
+}
+
+export function newBuild(build) {
+  return {
+    type: NEW_BUILD,
+    build: build,
+  }
+}
+
+export function updateBuild(build) {
+  return {
+    type: UPDATE_BUILD,
+    build: build,
+  }
 }

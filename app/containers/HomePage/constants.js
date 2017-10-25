@@ -9,4 +9,7 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
+export const LOAD_REPOS = 'boilerplate/Home/LOAD_REPOS';
+export const RECEIVED_REPOS = 'boilerplate/Home/RECEIVED_REPOS';
+export const NEW_REPO = 'boilerplate/Home/NEW_REPO';
+export const UPDATE_REPO = 'boilerplate/Home/UPDATE_REPO';

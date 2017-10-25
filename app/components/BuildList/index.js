@@ -8,23 +8,28 @@ function formatTime(time) {
   return moment.tz(time, "America/Chicago").format('MM/DD/YYYY hh:mm:ss a');
 }
 
+function calcTime(row) {
+  const minutes = Math.floor(((row.original.end_time - row.original.build_start) / 1000) / 60);
+  let seconds = Math.floor(((row.original.end_time - row.original.build_start) / 1000) - (minutes * 60));
+  if (seconds < 10) {
+    seconds = '0' + seconds;
+  }
+  return minutes + ':' + seconds;
+}
+
 function cellColor(row) {
-  if (row.original.error || (row.original.start_time < ((new Date).getTime() - (5 * 60 * 1000)) && row.original.end_time === undefined)) {
+  if (row.original.error || (row.original.build_start < ((new Date).getTime() - (5 * 60 * 1000)) && row.original.end_time === undefined)) {
     return <div className="red">Error</div>;
-  } else if (row.original.end_time === undefined && row.original.start_time > ((new Date).getTime() - (5 * 60 * 1000))) {
+  } else if (row.original.end_time === undefined && row.original.build_start > ((new Date).getTime() - (5 * 60 * 1000))) {
     return  <div className="yellow">Building</div>;
   }
   return <div className="green">Complete</div>;
 }
 
-function ReposList(repos) {
-  let content = (<div>Fetching Repos...</div>);
-  if (repos.repos) {
-    const columns = [{
-      Header: 'Repo',
-      accessor: 'repo_name',
-      filterable: true,
-    },
+function BuildList(builds) {
+  let content = (<div>Fetching Builds...</div>);
+  if (builds.builds) {
+    const columns = [
       {
         Header: 'Status',
         filterable: true,
@@ -39,10 +44,16 @@ function ReposList(repos) {
     },
       {
         Header: 'Start Time',
-        accessor: 'start_time',
+        accessor: 'build_start',
         filterable: true,
         Cell: row => (
           formatTime(row.value)
+        )
+      },
+      {
+        Header: 'Build Time',
+        Cell: row => (
+          calcTime(row)
         )
       },
     {
@@ -58,22 +69,23 @@ function ReposList(repos) {
         )
       },
       {
-        Header: 'Builds',
+        Header: 'Output',
         accessor: 'repo_name',
         Cell: row => (
-          <Link to={'/build/' + row.value}>Details</Link>
+          <Link to={'/build/' + row.original.repo_name + '/' + row.original.build_start}>Details</Link>
         )
       }
       ];
-    content = <ReactTable data={repos.repos} columns={columns}/>
+    content = <ReactTable data={builds.builds} columns={columns}/>
   }
   return <div>
     {content}
   </div>;
 }
 
-ReposList.propTypes = {
-  repos: PropTypes.any,
+
+BuildList.propTypes = {
+  builds: PropTypes.any,
 };
 
-export default ReposList;
+export default BuildList;

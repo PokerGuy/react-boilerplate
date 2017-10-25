@@ -6,7 +6,8 @@ import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects'
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_DETAILS } from './constants';
 import { receivedDetails, clearDetails } from './actions';
-import { makeSelectRepo } from './selectors'
+import { makeSelectRepo } from './selectors';
+const api_url = process.env.API_URL || 'https://sandbox.api.magickpics.com';
 
 const axios = require('axios');
 
@@ -14,7 +15,7 @@ function callBuilds(repo, start) {
   console.log(repo);
   console.log(start);
   return new Promise(function(fulfill, reject) {
-    axios.get('https://sandbox.api.magickpics.com/build/' + repo + '/' + start)
+    axios.get(api_url + '/build/' + repo + '/' + start)
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {

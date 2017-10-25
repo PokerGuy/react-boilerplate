@@ -3,6 +3,16 @@ AWS_ENV=$1
 
 echo "Environment is ${AWS_ENV}"
 
+if [ "$AWS_ENV" = "prod" ]; then
+  export API_URL="https://api.magickpics.com"
+elif [ "$AWS_ENV" = "test" ]; then
+  export API_URL="https://test.api.magickpics.com"
+else
+  export API_URL="https://sandbox.api.magickpics.com"
+fi
+
+echo "Setting API_URL to ${API_URL}"
+
 cd /tmp/clone
 
 npm install

@@ -88,8 +88,6 @@ export class BuildPage extends React.PureComponent { // eslint-disable-line reac
 
 
   render() {
-    console.log('i think the repo is:');
-    console.log(this.props.params.repo);
     return (
       <article>
         <Helmet

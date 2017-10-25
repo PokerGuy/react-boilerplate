@@ -6,13 +6,14 @@ import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects'
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_REPO } from './constants';
 import { receivedBuilds } from './actions';
-import { makeSelectRepo } from './selectors'
+import { makeSelectRepo } from './selectors';
+const api_url = process.env.API_URL || 'https://sandbox.api.magickpics.com';
 
 const axios = require('axios');
 
 function callBuilds(repo) {
   return new Promise(function(fulfill, reject) {
-    axios.get('https://r2hx7xn3i2.execute-api.us-west-2.amazonaws.com/sandbox/build/' + repo)
+    axios.get(api_url + '/build/' + repo)
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {

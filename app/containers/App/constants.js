@@ -9,8 +9,7 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const GET_CLIENT = 'boilerplate/App/GET_CLIENT';
-export const SET_CLIENT = 'boilerplate/App/SET_CLIENT';
-export const CONNECTED = 'boilerplate/App/CONNECTED';
-export const DISCONNECTED = 'boilerplate/App/DISCONNECTED';
+export const SET_CREDENTIALS = 'boilerplate/App/SET_CREDENTIALS';
+export const SET_CONNECTION = 'boilerplate/App/SET_CONNECTION';
+export const GET_CREDENTIALS = 'boilerplate/App/GET_CREDENTIALS';
 export const DEFAULT_LOCALE = 'en';

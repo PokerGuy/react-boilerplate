@@ -14,35 +14,22 @@ import { fromJS } from 'immutable';
 const awsIot = require('aws-iot-device-sdk');
 
 import {
-  SET_CLIENT,
-  CONNECTED,
-  DISCONNECTED,
+  SET_CONNECTION,
+  SET_CREDENTIALS,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
-  client: null,
-  connected: false,
+  connected: 'disconnected',
+  credentials: null,
 });
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_CLIENT:
-      const client = awsIot.device({
-        region: action.credentials.region,
-        protocol: 'wss',
-        accessKeyId: action.credentials.accessKey,
-        secretKey: action.credentials.secretKey,
-        sessionToken: action.credentials.sessionToken,
-        port: 443,
-        host: action.credentials.iotEndpoint,
-      });
-      return state
-        .set('client', client);
-    case CONNECTED:
-      return state.set('connected', true);
-    case DISCONNECTED:
-      return state.set('connected', false);
+    case SET_CONNECTION:
+      return state.set('connected', action.status);
+    case SET_CREDENTIALS:
+      return state.set('credentials', action.credentials);
     default:
       return state;
   }

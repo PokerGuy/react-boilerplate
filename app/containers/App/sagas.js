@@ -4,8 +4,8 @@
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { GET_CLIENT } from './constants';
-import { setClient } from './actions';
+import { GET_CREDENTIALS } from './constants';
+import { setCredentials } from './actions';
 
 const axios = require('axios');
 
@@ -21,13 +21,8 @@ function callCreds() {
 }
 
 function* checkCredentials() {
-  if (localStorage.credentials) {
-    yield put(setClient(JSON.parse(localStorage.credentials)));
-  } else {
     const creds = yield callCreds();
-    localStorage.credentials = JSON.stringify(creds);
-    yield put(setClient(creds));
-  }
+    yield put(setCredentials(creds));
 }
 
 function* doTest() {
@@ -41,7 +36,7 @@ export function* globalSaga() {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
-  const watcher = yield takeLatest(GET_CLIENT, checkCredentials);
+  const watcher = yield takeLatest(GET_CREDENTIALS, checkCredentials);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);

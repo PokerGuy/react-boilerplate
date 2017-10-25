@@ -6,16 +6,15 @@ import { createSelector } from 'reselect';
 
 const selectGlobal = (state) => state.get('global');
 
-const makeSelectClient = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('client')
-);
-
 const makeSelectConnected = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('connected')
 );
 
+const makeSelectCredentials = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('credentials')
+);
 
 const makeSelectLocationState = () => {
   let prevRoutingState;
@@ -35,7 +34,7 @@ const makeSelectLocationState = () => {
 
 export {
   selectGlobal,
-  makeSelectClient,
   makeSelectConnected,
+  makeSelectCredentials,
   makeSelectLocationState,
 };

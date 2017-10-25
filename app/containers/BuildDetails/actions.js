@@ -20,6 +20,7 @@ import {
   RECEIVED_DETAILS,
   LOAD_DETAILS,
   CLEAR_DETAILS,
+  NEW_DETAIL,
 } from './constants';
 
 /**
@@ -54,5 +55,12 @@ export function receivedDetails(details) {
 export function clearDetails() {
   return {
     type: CLEAR_DETAILS,
+  }
+}
+
+export function newDetail(detail) {
+  return {
+    type: NEW_DETAIL,
+    detail: detail,
   }
 }

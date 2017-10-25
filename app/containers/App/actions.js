@@ -16,33 +16,28 @@
  */
 
 import {
-  GET_CLIENT,
-  SET_CLIENT,
-  CONNECTED,
-  DISCONNECTED,
+  GET_CREDENTIALS,
+  SET_CREDENTIALS,
+  SET_CONNECTION,
 } from './constants';
 
-export function getClient() {
+export function getCredentials() {
   return {
-    type: GET_CLIENT,
-  };
+    type: GET_CREDENTIALS,
+  }
 }
 
-export function setClient(credentials) {
+
+export function setCredentials(credentials) {
   return {
-    type: SET_CLIENT,
+    type: SET_CREDENTIALS,
     credentials: credentials,
-  };
+  }
 }
 
-export function connected() {
+export function setConnection(status) {
   return {
-    type: CONNECTED,
-  };
-}
-
-export function disconnected() {
-  return {
-    type: DISCONNECTED,
-  };
+    type: SET_CONNECTION,
+    status: status,
+  }
 }

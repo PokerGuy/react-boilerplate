@@ -19,6 +19,8 @@ import {
   SET_REPO,
   RECEIVED_BUILDS,
   LOAD_BUILDS,
+  NEW_BUILD,
+  UPDATE_BUILD,
 } from './constants';
 
 /**
@@ -46,5 +48,19 @@ export function receivedBuilds(builds) {
   return {
     type: RECEIVED_BUILDS,
     builds: builds,
+  }
+}
+
+export function newBuild(build) {
+  return {
+    type: NEW_BUILD,
+    build: build,
+  }
+}
+
+export function updateBuild(build) {
+  return {
+    type: UPDATE_BUILD,
+    build: build,
   }
 }

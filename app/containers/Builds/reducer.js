@@ -13,8 +13,9 @@ import { fromJS } from 'immutable';
 
 import {
   SET_REPO,
-  LOAD_BUILDS,
   RECEIVED_BUILDS,
+  NEW_BUILD,
+  UPDATE_BUILD,
 } from './constants';
 
 // The initial state of the App
@@ -30,6 +31,17 @@ function buildReducer(state = initialState, action) {
       return state.set('repo', action.repo);
     case RECEIVED_BUILDS:
       return state.set('builds', action.builds);
+    case NEW_BUILD:
+      return state.set('builds', [...state.get('builds'), action.build]);
+    case UPDATE_BUILD:
+      const update = state.get('builds').map(function(build) {
+        if (build.build_start === action.build.build_start) {
+          return action.build;
+        } else {
+          return build;
+        }
+      });
+      return state.set('builds', update);
     default:
       return state;
   }

@@ -13,9 +13,9 @@ import { fromJS } from 'immutable';
 
 import {
   SET_DETAILS,
-  LOAD_DETAILS,
   RECEIVED_DETAILS,
   CLEAR_DETAILS,
+  NEW_DETAIL,
 } from './constants';
 
 // The initial state of the App
@@ -36,6 +36,8 @@ function buildDetailsReducer(state = initialState, action) {
     case CLEAR_DETAILS:
       return state
         .set('details', null);
+    case NEW_DETAIL:
+      return state.set('details', [...state.get('details'), action.detail]);
     default:
       return state;
   }

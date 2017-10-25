@@ -4,8 +4,8 @@
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { LOAD_REPOS, GET_CREDENTIALS } from './constants';
-import { receivedRepos, setCredentials } from './actions';
+import { LOAD_REPOS } from './constants';
+import { receivedRepos } from './actions';
 
 const axios = require('axios');
 

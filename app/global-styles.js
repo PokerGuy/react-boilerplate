@@ -40,6 +40,28 @@ injectGlobal`
     background-color: red;
   }
   
+  .select-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .selected {
+    border-radius: 15px 50px 30px;
+    background: black
+    font-weight: bold;
+    color: white;
+    text-align: center,
+    padding: 20px; 
+    display: block;
+  }
+  
+  .not-select {
+    text-align: center,
+    padding: 20px;
+    display: block;
+  }
+  
   tr.separating_line {
     border-top: 1px #000 solid; /* top border only */
   }

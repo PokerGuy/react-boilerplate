@@ -7,7 +7,7 @@ import Details from '../../components/Details';
 import { setDetails, newDetail } from './actions';
 import { makeSelectDetails, makeSelectRepo } from './selectors';
 import {makeSelectConnected, makeSelectCredentials} from '../App/selectors';
-import {getCredentials, setConnection} from '../App/actions';
+import {getCredentials, setConnection, setHeaders} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 const moment = require('moment-timezone');
 let client;
@@ -19,6 +19,7 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
   componentDidMount() {
     this.props.setDetails(this.props.params.repo, this.props.params.start);
     this.props.setConnection('disconnected');
+    this.props.setHeaders(false);
   }
 
   componentWillUnmount() {
@@ -119,6 +120,7 @@ BuildDetailsPage.propTypes = {
   connectStatus: React.PropTypes.string,
   credentials: React.PropTypes.object,
   newDetail: React.PropTypes.func,
+  setHeaders: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -127,6 +129,7 @@ export function mapDispatchToProps(dispatch) {
     setConnection: (status) => dispatch(setConnection(status)),
     getCredentials: () => dispatch(getCredentials()),
     newDetail: (detail) => dispatch(newDetail(detail)),
+    setHeaders: (headers) => dispatch(setHeaders(headers)),
   };
 }
 

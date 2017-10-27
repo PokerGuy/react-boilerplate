@@ -12,7 +12,7 @@ import ReposList from '../../components/ReposList';
 import {loadRepos, newRepo, updateRepo} from './actions';
 import {makeSelectRepos} from './selectors';
 import {makeSelectConnected, makeSelectCredentials, makeSelectURL, makeSelectEnv} from '../App/selectors';
-import {getCredentials, setConnection} from '../App/actions';
+import {getCredentials, setConnection, setHeaders} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 
@@ -24,6 +24,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
     console.log(this.props.url);
     this.props.loadRepos();
     this.props.setConnection('disconnected');
+    this.props.setHeaders(true);
   }
 
   componentWillUnmount() {
@@ -129,6 +130,7 @@ HomePage.propTypes = {
   connectStatus: React.PropTypes.string,
   updateRepo: React.PropTypes.func,
   url: React.PropTypes.string,
+  setHeaders: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -138,6 +140,7 @@ export function mapDispatchToProps(dispatch) {
     updateRepo: (repo) => dispatch(updateRepo(repo)),
     setConnection: (status) => dispatch(setConnection(status)),
     getCredentials: () => dispatch(getCredentials()),
+    setHeaders: (headers) => dispatch(setHeaders(headers)),
   };
 }
 

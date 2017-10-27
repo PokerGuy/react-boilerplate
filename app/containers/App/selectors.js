@@ -21,6 +21,11 @@ const makeSelectEnv = () => createSelector(
   (globalState) => globalState.get('selectedEnv')
 );
 
+const makeSelectHeaders = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('headers')
+);
+
 const makeSelectURL = () => createSelector(
   selectGlobal,
   (globalState) => {
@@ -61,4 +66,5 @@ export {
   makeSelectLocationState,
   makeSelectEnv,
   makeSelectURL,
+  makeSelectHeaders,
 };

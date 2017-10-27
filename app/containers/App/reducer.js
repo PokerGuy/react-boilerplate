@@ -17,6 +17,7 @@ import {
   SET_CONNECTION,
   SET_CREDENTIALS,
   SET_ENV,
+  SET_HEADERS,
 } from './constants';
 
 // The initial state of the App
@@ -24,6 +25,7 @@ const initialState = fromJS({
   connected: 'disconnected',
   credentials: null,
   selectedEnv: 'Sandbox',
+  headers: true,
 });
 
 function appReducer(state = initialState, action) {
@@ -34,6 +36,8 @@ function appReducer(state = initialState, action) {
       return state.set('credentials', action.credentials);
     case SET_ENV:
       return state.set('selectedEnv', action.env);
+    case SET_HEADERS:
+      return state.set('headers', action.headers);
     default:
       return state;
   }

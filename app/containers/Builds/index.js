@@ -7,7 +7,7 @@ import BuildList from '../../components/BuildList';
 import { setRepo, updateBuild, newBuild } from './actions';
 import { makeSelectBuilds } from './selectors';
 import {makeSelectConnected, makeSelectCredentials} from '../App/selectors';
-import {getCredentials, setConnection} from '../App/actions';
+import {getCredentials, setConnection, setHeaders} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 
@@ -18,6 +18,7 @@ export class BuildPage extends React.PureComponent { // eslint-disable-line reac
   componentDidMount() {
     this.props.setRepo(this.props.params.repo);
     this.props.setConnection('disconnected');
+    this.props.setHeaders(true);
   }
 
   componentWillUnmount() {
@@ -116,6 +117,7 @@ BuildPage.propTypes = {
   credentials: React.PropTypes.object,
   updateBuild: React.PropTypes.func,
   newBuild: React.PropTypes.func,
+  setHeaders: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -125,6 +127,7 @@ export function mapDispatchToProps(dispatch) {
     getCredentials: () => dispatch(getCredentials()),
     updateBuild: (build) => dispatch(updateBuild(build)),
     newBuild: (build) => dispatch(newBuild(build)),
+    setHeaders: (headers) => dispatch(setHeaders(headers)),
   };
 }
 

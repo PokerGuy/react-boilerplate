@@ -20,6 +20,7 @@ import {
   SET_CREDENTIALS,
   SET_CONNECTION,
   SET_ENV,
+  SET_HEADERS,
 } from './constants';
 
 export function getCredentials() {
@@ -47,5 +48,12 @@ export function setEnv(env) {
   return {
     type: SET_ENV,
     env: env,
+  }
+}
+
+export function setHeaders(headers) {
+  return {
+    type: SET_HEADERS,
+    headers: headers,
   }
 }

@@ -16,6 +16,28 @@ const makeSelectCredentials = () => createSelector(
   (globalState) => globalState.get('credentials')
 );
 
+const makeSelectEnv = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('selectedEnv')
+);
+
+const makeSelectURL = () => createSelector(
+  selectGlobal,
+  (globalState) => {
+    const env = globalState.get('selectedEnv');
+    switch (env.toLowerCase()) {
+      case 'sandbox':
+        return 'https://sandbox.api.magickpics.com';
+      case 'test':
+        return 'https://test.api.magickpics.com';
+      case 'prod':
+        return 'https://api.magickpics.com';
+      default:
+        return 'https://sandbox.api.magickpics.com';
+    }
+  }
+);
+
 const makeSelectLocationState = () => {
   let prevRoutingState;
   let prevRoutingStateJS;
@@ -37,4 +59,6 @@ export {
   makeSelectConnected,
   makeSelectCredentials,
   makeSelectLocationState,
+  makeSelectEnv,
+  makeSelectURL,
 };

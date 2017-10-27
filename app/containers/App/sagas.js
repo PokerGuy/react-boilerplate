@@ -6,13 +6,13 @@ import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects'
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { GET_CREDENTIALS } from './constants';
 import { setCredentials } from './actions';
-const api_url = process.env.API_URL || 'https://sandbox.api.magickpics.com';
+import { makeSelectURL } from './selectors';
 
 const axios = require('axios');
 
-function callCreds() {
+function callCreds(url) {
   return new Promise(function(fulfill, reject) {
-    axios.get(api_url + '/iot')
+    axios.get(url + '/iot')
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {
@@ -22,13 +22,11 @@ function callCreds() {
 }
 
 function* checkCredentials() {
-    const creds = yield callCreds();
+    const url = yield select(makeSelectURL());
+    const creds = yield callCreds(url);
     yield put(setCredentials(creds));
 }
 
-function* doTest() {
-  yield put(test());
-}
 
 /**
  * Root saga manages watcher lifecycle

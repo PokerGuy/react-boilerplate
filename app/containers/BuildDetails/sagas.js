@@ -7,11 +7,11 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_DETAILS } from './constants';
 import { receivedDetails, clearDetails } from './actions';
 import { makeSelectRepo } from './selectors';
-const api_url = process.env.API_URL || 'https://sandbox.api.magickpics.com';
+import { makeSelectURL } from '../App/selectors';
 
 const axios = require('axios');
 
-function callBuilds(repo, start) {
+function callBuilds(repo, start, url) {
   console.log(repo);
   console.log(start);
   return new Promise(function(fulfill, reject) {
@@ -27,7 +27,8 @@ function callBuilds(repo, start) {
 export function* getDetails() {
   yield put(clearDetails());
   const repo = yield select(makeSelectRepo());
-  const details = yield call(callBuilds, repo.repo, repo.start);
+  const url = yield select(makeSelectURL());
+  const details = yield call(callBuilds, repo.repo, repo.start, url);
   yield put(receivedDetails(details));
 }
 

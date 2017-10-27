@@ -6,12 +6,12 @@ import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects'
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_REPOS } from './constants';
 import { receivedRepos } from './actions';
-const api_url = process.env.API_URL || 'https://sandbox.api.magickpics.com';
+import { makeSelectURL } from '../App/selectors';
 const axios = require('axios');
 
-function callRepos() {
+function callRepos(url) {
   return new Promise(function(fulfill, reject) {
-    axios.get(api_url + '/locks')
+    axios.get(url + '/locks')
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {
@@ -21,7 +21,8 @@ function callRepos() {
 }
 
 function* getRepos() {
-  const repos = yield call(callRepos);
+  const url = yield select(makeSelectURL());
+  const repos = yield call(callRepos, url);
   yield put (receivedRepos(repos));
 }
 

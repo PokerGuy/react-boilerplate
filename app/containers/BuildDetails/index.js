@@ -86,7 +86,7 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
   }
 
   render() {
-    console.log(this.props);
+    console.log(this.props.route.path);
     const buildTime = moment.tz(parseInt(this.props.repo.start), 'America/Chicago').format('MM/DD/YYYY hh:mm:ss a');
     return (
       <article>

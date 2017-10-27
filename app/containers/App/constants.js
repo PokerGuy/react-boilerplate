@@ -12,4 +12,5 @@
 export const SET_CREDENTIALS = 'boilerplate/App/SET_CREDENTIALS';
 export const SET_CONNECTION = 'boilerplate/App/SET_CONNECTION';
 export const GET_CREDENTIALS = 'boilerplate/App/GET_CREDENTIALS';
+export const SET_ENV = 'boilerplate/App/SET_ENV';
 export const DEFAULT_LOCALE = 'en';

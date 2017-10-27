@@ -11,7 +11,7 @@ import {createStructuredSelector} from 'reselect';
 import ReposList from '../../components/ReposList';
 import {loadRepos, newRepo, updateRepo} from './actions';
 import {makeSelectRepos} from './selectors';
-import {makeSelectConnected, makeSelectCredentials} from '../App/selectors';
+import {makeSelectConnected, makeSelectCredentials, makeSelectURL, makeSelectEnv} from '../App/selectors';
 import {getCredentials, setConnection} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
@@ -21,6 +21,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
    * when initial state username is not null, submit the form to load repos
    */
   componentDidMount() {
+    console.log(this.props.url);
     this.props.loadRepos();
     this.props.setConnection('disconnected');
   }
@@ -33,6 +34,10 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.env !== nextProps.env) {
+      this.props.setConnection('disconnected');
+      this.props.loadRepos();
+    }
     if ((nextProps.connectStatus === 'disconnected' || nextProps.connectStatus === 'newcredentials') && !client) {
       //Need a client
       let credentials = localStorage.credentials;
@@ -123,11 +128,12 @@ HomePage.propTypes = {
   newRepo: React.PropTypes.func,
   connectStatus: React.PropTypes.string,
   updateRepo: React.PropTypes.func,
+  url: React.PropTypes.string,
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    loadRepos: () => dispatch(loadRepos()),
+    loadRepos: (url) => dispatch(loadRepos(url)),
     newRepo: (evt) => dispatch(newRepo(evt)),
     updateRepo: (repo) => dispatch(updateRepo(repo)),
     setConnection: (status) => dispatch(setConnection(status)),
@@ -139,6 +145,8 @@ const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
   connectStatus: makeSelectConnected(),
   credentials: makeSelectCredentials(),
+  url: makeSelectURL(),
+  env: makeSelectEnv(),
 });
 
 // Wrap the component to inject dispatch and state into it

@@ -26,34 +26,34 @@ import {
 export function getCredentials() {
   return {
     type: GET_CREDENTIALS,
-  }
+  };
 }
 
 
 export function setCredentials(credentials) {
   return {
     type: SET_CREDENTIALS,
-    credentials: credentials,
-  }
+    credentials,
+  };
 }
 
 export function setConnection(status) {
   return {
     type: SET_CONNECTION,
-    status: status,
-  }
+    status,
+  };
 }
 
 export function setEnv(env) {
   return {
     type: SET_ENV,
-    env: env,
-  }
+    env,
+  };
 }
 
 export function setPage(page) {
   return {
     type: SET_USERPAGE,
-    page: page,
-  }
+    page,
+  };
 }

@@ -20,7 +20,7 @@ import {
   SET_CREDENTIALS,
   SET_CONNECTION,
   SET_ENV,
-  SET_HEADERS,
+  SET_USERPAGE,
 } from './constants';
 
 export function getCredentials() {
@@ -51,9 +51,9 @@ export function setEnv(env) {
   }
 }
 
-export function setHeaders(headers) {
+export function setPage(page) {
   return {
-    type: SET_HEADERS,
-    headers: headers,
+    type: SET_USERPAGE,
+    page: page,
   }
 }

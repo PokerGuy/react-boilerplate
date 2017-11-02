@@ -17,15 +17,15 @@ import {
   SET_CONNECTION,
   SET_CREDENTIALS,
   SET_ENV,
-  SET_HEADERS,
+  SET_USERPAGE,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
-  connected: 'disconnected',
+  connected: null,
   credentials: null,
   selectedEnv: 'Sandbox',
-  headers: true,
+  page: 'repos',
 });
 
 function appReducer(state = initialState, action) {
@@ -36,8 +36,8 @@ function appReducer(state = initialState, action) {
       return state.set('credentials', action.credentials);
     case SET_ENV:
       return state.set('selectedEnv', action.env);
-    case SET_HEADERS:
-      return state.set('headers', action.headers);
+    case SET_USERPAGE:
+      return state.set('page', action.page);
     default:
       return state;
   }

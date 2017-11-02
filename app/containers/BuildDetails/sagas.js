@@ -15,7 +15,7 @@ function callBuilds(repo, start, url) {
   console.log(repo);
   console.log(start);
   return new Promise(function(fulfill, reject) {
-    axios.get(api_url + '/build/' + repo + '/' + start)
+    axios.get(url + '/build/' + repo + '/' + start)
       .then(function(result) {
         fulfill(result.data)
       }).catch(function(err) {

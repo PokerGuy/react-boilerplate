@@ -7,7 +7,7 @@ import Details from '../../components/Details';
 import { setDetails, newDetail } from './actions';
 import { makeSelectDetails, makeSelectRepo } from './selectors';
 import {makeSelectConnected, makeSelectCredentials} from '../App/selectors';
-import {getCredentials, setConnection, setHeaders} from '../App/actions';
+import {getCredentials, setConnection, setPage} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 const moment = require('moment-timezone');
 let client;
@@ -19,7 +19,7 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
   componentDidMount() {
     this.props.setDetails(this.props.params.repo, this.props.params.start);
     this.props.setConnection('disconnected');
-    this.props.setHeaders(false);
+    this.props.setPage('build_details');
   }
 
   componentWillUnmount() {
@@ -87,8 +87,7 @@ export class BuildDetailsPage extends React.PureComponent { // eslint-disable-li
   }
 
   render() {
-    console.log(this.props.route.path);
-    const buildTime = moment.tz(parseInt(this.props.repo.start), 'America/Chicago').format('MM/DD/YYYY hh:mm:ss a');
+    const buildTime = moment.tz(parseInt(this.props.repo.start), 'America/Chicago').format('MMMM DD YYYY hh:mm:ss a');
     return (
       <article>
         <Helmet
@@ -120,7 +119,7 @@ BuildDetailsPage.propTypes = {
   connectStatus: React.PropTypes.string,
   credentials: React.PropTypes.object,
   newDetail: React.PropTypes.func,
-  setHeaders: React.PropTypes.func,
+  setPage: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -129,7 +128,7 @@ export function mapDispatchToProps(dispatch) {
     setConnection: (status) => dispatch(setConnection(status)),
     getCredentials: () => dispatch(getCredentials()),
     newDetail: (detail) => dispatch(newDetail(detail)),
-    setHeaders: (headers) => dispatch(setHeaders(headers)),
+    setPage: (page) => dispatch(setPage(page)),
   };
 }
 

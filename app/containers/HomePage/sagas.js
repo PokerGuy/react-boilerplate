@@ -5,7 +5,7 @@
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_REPOS } from './constants';
-import { receivedRepos } from './actions';
+import { receivedRepos, clearRepos } from './actions';
 import { makeSelectURL } from '../App/selectors';
 const axios = require('axios');
 
@@ -21,6 +21,7 @@ function callRepos(url) {
 }
 
 function* getRepos() {
+  yield put(clearRepos());
   const url = yield select(makeSelectURL());
   const repos = yield call(callRepos, url);
   yield put (receivedRepos(repos));

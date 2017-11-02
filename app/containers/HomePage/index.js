@@ -12,7 +12,7 @@ import ReposList from '../../components/ReposList';
 import {loadRepos, newRepo, updateRepo} from './actions';
 import {makeSelectRepos} from './selectors';
 import {makeSelectConnected, makeSelectCredentials, makeSelectURL, makeSelectEnv} from '../App/selectors';
-import {getCredentials, setConnection, setHeaders} from '../App/actions';
+import {getCredentials, setConnection, setPage} from '../App/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 
@@ -21,80 +21,8 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
    * when initial state username is not null, submit the form to load repos
    */
   componentDidMount() {
-    console.log(this.props.url);
     this.props.loadRepos();
-    this.props.setConnection('disconnected');
-    this.props.setHeaders(true);
-  }
-
-  componentWillUnmount() {
-    client.end(function(){
-      console.log('killed the old client');
-      client = null;
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.env !== nextProps.env) {
-      this.props.setConnection('disconnected');
-      this.props.loadRepos();
-    }
-    if ((nextProps.connectStatus === 'disconnected' || nextProps.connectStatus === 'newcredentials') && !client) {
-      //Need a client
-      let credentials = localStorage.credentials;
-      if (credentials) {
-        credentials = JSON.parse(credentials);
-        //Try to use the localStorage credentials...
-        client = awsIot.device({
-          region: credentials.region,
-          protocol: 'wss',
-          accessKeyId: credentials.accessKey,
-          secretKey: credentials.secretKey,
-          sessionToken: credentials.sessionToken,
-          port: 443,
-          host: credentials.iotEndpoint,
-        });
-        client.on('connect', () => {
-          console.log('CONNECTED!!');
-          client.subscribe('repos');
-          this.props.setConnection('connected');
-        });
-
-        client.on('message', (topic, message) => {
-          const string = new TextDecoder().decode(message);
-          const msg = JSON.parse(string);
-          console.log(msg);
-          if (msg.type === 'new') {
-            this.props.newRepo(msg.payload);
-          } else if (msg.type === 'update') {
-            this.props.updateRepo(msg.payload);
-          }
-        });
-
-        client.on('close', () => {
-          console.log('client closed');
-        });
-
-        client.on('error', (error) => {
-          console.log('ERROR');
-          //Probably bad credentials...
-          localStorage.removeItem('credentials');
-          this.props.setConnection('disconnected');
-          this.props.getCredentials();
-          client.end(function(){
-            console.log('killed the old client');
-            client = null;
-          })
-        });
-      } else {
-        //No local credentials... Try and get some...
-        this.props.getCredentials();
-      }
-    }
-    if ((this.props.credentials !== nextProps.credentials) && nextProps.connectStatus !== 'connected') {
-      localStorage.credentials = JSON.stringify(nextProps.credentials);
-      this.props.setConnection('newcredentials');
-    }
+    this.props.setPage('repos');
   }
 
   render() {
@@ -130,7 +58,7 @@ HomePage.propTypes = {
   connectStatus: React.PropTypes.string,
   updateRepo: React.PropTypes.func,
   url: React.PropTypes.string,
-  setHeaders: React.PropTypes.func,
+  setLocation: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -140,7 +68,7 @@ export function mapDispatchToProps(dispatch) {
     updateRepo: (repo) => dispatch(updateRepo(repo)),
     setConnection: (status) => dispatch(setConnection(status)),
     getCredentials: () => dispatch(getCredentials()),
-    setHeaders: (headers) => dispatch(setHeaders(headers)),
+    setPage: (page) => dispatch(setPage(page)),
   };
 }
 

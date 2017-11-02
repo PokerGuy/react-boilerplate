@@ -20,6 +20,7 @@ import {
   RECEIVED_REPOS,
   NEW_REPO,
   UPDATE_REPO,
+  CLEAR_REPOS,
 } from './constants';
 
 /**
@@ -55,4 +56,10 @@ export function updateRepo(repo) {
     type: UPDATE_REPO,
     repo: repo,
   };
+}
+
+export function clearRepos() {
+  return {
+    type: CLEAR_REPOS,
+  }
 }

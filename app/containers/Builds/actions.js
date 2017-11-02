@@ -21,6 +21,7 @@ import {
   LOAD_BUILDS,
   NEW_BUILD,
   UPDATE_BUILD,
+  CLEAR_BUILDS,
 } from './constants';
 
 /**
@@ -62,5 +63,11 @@ export function updateBuild(build) {
   return {
     type: UPDATE_BUILD,
     build: build,
+  }
+}
+
+export function clearBuilds() {
+  return {
+    type: CLEAR_BUILDS,
   }
 }

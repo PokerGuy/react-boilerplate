@@ -11,6 +11,7 @@
 
 export const SET_REPO = 'boilerplate/Build/SET_REPO';
 export const LOAD_BUILDS = 'boilerplate/Build/LOAD_BUILDS';
+export const CLEAR_BUILDS = 'boilerplate/Build/CLEAR_BUILDS';
 export const RECEIVED_BUILDS = 'boilerplate/Build/RECEIVED_BUILDS';
 export const NEW_BUILD = 'boilerplate/Build/NEW_BUILD';
 export const UPDATE_BUILD = 'boilerplate/Build/UPDATE_BUILD';

@@ -4,6 +4,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_ENV, SET_USERPAGE } from './constants';
 import { setCredentials } from './actions';
 import { makeSelectURL } from './selectors';
+import { NEW_REPO, UPDATE_REPO } from '../HomePage/constants';
 import { newRepo, updateRepo } from '../HomePage/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
@@ -18,11 +19,12 @@ let credentials;
 
 const axios = require('axios');
 
-function* callCreds() {
-  const url = yield select(makeSelectURL());
+function callCreds(url) {
   return new Promise((fulfill, reject) => {
     axios.get(`${url}/iot`)
       .then((result) => {
+        console.log('in axios and credentials are');
+        console.log(result.data);
         fulfill(result.data);
       }).catch((err) => {
         reject(err);
@@ -30,98 +32,64 @@ function* callCreds() {
   });
 }
 
-function* watchClient(client) {
-  const channel = eventChannel(emmiter => {
+function initClient() {
+  return eventChannel(emitter => {
+    console.log('setting up the client');
+    console.log('here are the credentials');
+    console.log(credentials);
+    client = awsIot.device({
+      region: credentials.region,
+      protocol: 'wss',
+      accessKeyId: credentials.accessKey,
+      secretKey: credentials.secretKey,
+      sessionToken: credentials.sessionToken,
+      port: 443,
+      host: credentials.iotEndpoint,
+    });
+
     client.on('connect', () => {
-      console.log('CONNECTED!!');
+      console.log('CONNECTED!');
       client.subscribe('repos');
+    });
+
+    client.on('error', (err) => {
+      console.log('ERROR');
+      console.log(err);
+      //  Probably bad credentials...
+      localStorage.removeItem('credentials');
+      client.end(() => {
+        console.log('Killed the client.');
+        client = null;
+      });
     });
 
     client.on('message', (topic, message) => {
       const string = new TextDecoder().decode(message);
       const msg = JSON.parse(string);
       console.log(msg);
-      if (msg.type === 'new') {
-        this.props.newRepo(msg.payload);
-      } else if (msg.type === 'update') {
-        this.props.updateRepo(msg.payload);
+      switch (msg.type) {
+        case 'new':
+          return emitter({ type: NEW_REPO, repo: msg.payload });
+        case 'update':
+          return emitter({ type: UPDATE_REPO, repo: msg.payload });
+        default:
+          //  Do nothing
       }
     });
 
-    client.on('close', () => {
-      console.log('client closed');
-    });
-
-    client.on('error', (error) => {
-      console.log('ERROR');
-      console.log(error);
-      //  Probably bad credentials...
-      localStorage.removeItem('credentials');
-      this.props.setConnection('disconnected');
-      this.props.getCredentials();
-      client.end(() => {
-        console.log('killed the old client');
-        client = null;
-      });
-    });
+    return () => {
+      console.log('Client off');
+    };
   });
 
-  while (true) {
-    const msg = yield take(channel);
-    if (msg.type === 'new') {
-      yield put(newRepo(msg));
-    } else if (msg.type === 'update') {
-      yield put(updateRepo(msg));
-    }
-  }
 }
 
-function* setupClient() {
-  if (!credentials && localStorage.getItem('credentials')) {
-    console.log('have credentials in localstorage...');
-    credentials = JSON.parse(localStorage.getItem('credentials'));
-  } else if (!credentials) {
-    console.log('no local creds... calling to get them...');
-    credentials = yield call(callCreds());
-    localStorage.credentials = JSON.stringify(credentials);
-    console.log('got the new credentials');
-  } else {
-    console.log('already have credentials in memory');
-  }
-  console.log('setting up the client');
-  client = awsIot.device({
-    region: credentials.region,
-    protocol: 'wss',
-    accessKeyId: credentials.accessKey,
-    secretKey: credentials.secretKey,
-    sessionToken: credentials.sessionToken,
-    port: 443,
-    host: credentials.iotEndpoint,
-  });
-  return eventChannel(emit => {
-
-    const receiveMsg = (event) => {
-      emit(event.payload);
-    };
-
-    const updateEvent = (event) => {
-      emit(event.payload);
-    };
-
-    const unsubscribe = () => {
-      client.end(() => {
-        console.log('killed the client...');
-      });
-    };
-  });
-}
-
-function* checkCredentials() {
+/* function* checkCredentials() {
   console.log('in checkCredentials');
   const url = yield select(makeSelectURL());
   const creds = yield callCreds(url);
   yield put(setCredentials(creds));
-}
+} */
 
 function* envChange() {
   console.log('envChange');
@@ -129,6 +97,25 @@ function* envChange() {
 
 function* pageChange() {
   console.log('pageChange');
+  if (!credentials && localStorage.getItem('credentials')) {
+    console.log('have credentials in localstorage...');
+    credentials = JSON.parse(localStorage.getItem('credentials'));
+  } else if (!credentials) {
+    console.log('no local creds... calling to get them...');
+    const url = yield select(makeSelectURL());
+    credentials = yield call(callCreds, url);
+    console.log('The credentials are:');
+    console.log(credentials);
+    localStorage.credentials = JSON.stringify(credentials);
+    console.log('got the new credentials');
+  } else {
+    console.log('already have credentials in memory');
+  }
+  const channel = yield call(initClient);
+  while (true) {
+    const action = yield take(channel);
+    yield put(action);
+  }
 }
 
 

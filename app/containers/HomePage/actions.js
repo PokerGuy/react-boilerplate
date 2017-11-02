@@ -45,6 +45,8 @@ export function receivedRepos(repos) {
 }
 
 export function newRepo(repo) {
+  console.log('in the action');
+  console.log(repo);
   return {
     type: NEW_REPO,
     repo: repo,

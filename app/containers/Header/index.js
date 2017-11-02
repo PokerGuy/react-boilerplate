@@ -17,99 +17,21 @@ const preventDefault = (fn, ...args) => (e) => {
 };
 
 export class Header extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-  componentDidMount() {
-    this.props.setConnection('disconnected');
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedEnv !== nextProps.selectedEnv) {
-      switch(this.props.page) {
-        case 'repos':
-          this.props.loadRepos();
-        case 'build':
-          this.props.loadBuilds();
-      }
-      client.end(() => {
-        console.log('Killed old client');
-        client = null;
-        this.props.setConnection('disconnected');
-      });
-    }
-
-    if ((nextProps.connectStatus === 'disconnected' || nextProps.connectStatus === 'newcredentials') && !client) {
-      //Need a client
-      let credentials = localStorage.credentials;
-      if (credentials) {
-        credentials = JSON.parse(credentials);
-        //Try to use the localStorage credentials...
-        client = awsIot.device({
-          region: credentials.region,
-          protocol: 'wss',
-          accessKeyId: credentials.accessKey,
-          secretKey: credentials.secretKey,
-          sessionToken: credentials.sessionToken,
-          port: 443,
-          host: credentials.iotEndpoint,
-        });
-        client.on('connect', () => {
-          console.log('CONNECTED!!');
-          client.subscribe('repos');
-          this.props.setConnection('connected');
-        });
-
-        client.on('message', (topic, message) => {
-          const string = new TextDecoder().decode(message);
-          const msg = JSON.parse(string);
-          console.log(msg);
-          if (msg.type === 'new') {
-            this.props.newRepo(msg.payload);
-          } else if (msg.type === 'update') {
-            this.props.updateRepo(msg.payload);
-          }
-        });
-
-        client.on('close', () => {
-          console.log('client closed');
-        });
-
-        client.on('error', (error) => {
-          console.log('ERROR');
-          //Probably bad credentials...
-          localStorage.removeItem('credentials');
-          this.props.setConnection('disconnected');
-          this.props.getCredentials();
-          client.end(function(){
-            console.log('killed the old client');
-            client = null;
-          })
-        });
-      } else {
-        //No local credentials... Try and get some...
-        this.props.getCredentials();
-      }
-    }
-    if ((this.props.credentials !== nextProps.credentials) && nextProps.connectStatus !== 'connected') {
-      localStorage.credentials = JSON.stringify(nextProps.credentials);
-      this.props.setConnection('newcredentials');
-    }
-  }
-
   render() {
     let select;
     if (this.props.page === 'repos' || this.props.page === 'build') {
       const envs = ['Sandbox', 'Test', 'Prod'];
       select = envs.map((env, i) => {
         if (env === this.props.selectedEnv) {
-          return <span key={i} className="selected">{env}</span>
-        } else {
-          return <span key={i} className="not-select"><div href="#" onClick={preventDefault(this.props.setEnv, env)}>{env}</div></span>
+          return <span key={i} className="selected">{env}</span>;
         }
+        return <span key={i} className="not-select"><div href="#" onClick={preventDefault(this.props.setEnv, env)}>{env}</div></span>;
       });
     }
     return (
       <div>
-        <img src={Logo}/> <br/>
-        Serverless DevOps the Easy Way <br/>
+        <img src={Logo} /> <br />
+        Serverless DevOps the Easy Way <br />
         <div className="select-row">
           {select}
         </div>

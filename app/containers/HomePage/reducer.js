@@ -34,12 +34,11 @@ function homeReducer(state = initialState, action) {
     case RECEIVED_REPOS:
       return state.set('repos', action.repos);
     case UPDATE_REPO:
-      const update = state.get('repos').map(function(repo) {
+      const update = state.get('repos').map((repo) => {
         if (repo.repo_name === action.repo.repo_name) {
           return action.repo;
-        } else {
-          return repo;
         }
+        return repo;
       });
       return state.set('repos', update);
     default:

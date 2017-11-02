@@ -1,15 +1,9 @@
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import React from 'react';
 import Logo from './synergy.png';
-import {connect} from 'react-redux';
-import {createStructuredSelector} from 'reselect';
-import {makeSelectEnv, makeSelectCredentials, makeSelectUserPage, makeSelectConnected} from '../App/selectors';
-import {makeSelectRepo} from '../Builds/selectors';
-import {setEnv, setConnection, getCredentials} from '../App/actions';
-import {loadRepos, newRepo, updateRepo} from '../HomePage/actions';
-import {loadBuilds} from '../Builds/actions';
-const awsIot = require('aws-iot-device-sdk');
-let client;
-
+import { makeSelectEnv, makeSelectUserPage, makeSelectConnected } from '../App/selectors';
+import { setEnv } from '../App/actions';
 
 const preventDefault = (fn, ...args) => (e) => {
   e.preventDefault();
@@ -44,24 +38,11 @@ Header.propTypes = {
   selectedEnv: React.PropTypes.string,
   setEnv: React.PropTypes.func,
   page: React.PropTypes.string,
-  connectStatus: React.PropTypes.string,
-  loadRepos: React.PropTypes.func,
-  loadBuilds: React.PropTypes.func,
-  getCredentials: React.PropTypes.func,
-  setConnection: React.PropTypes.func,
-  newRepo: React.PropTypes.func,
-  updateRepo: React.PropTypes.func,
 };
 
-export function mapDispatchToProps(dispatch, ownProps) {
+export function mapDispatchToProps(dispatch) {
   return {
     setEnv: (env) => dispatch(setEnv(env)),
-    setConnection: (conn) => dispatch(setConnection(conn)),
-    loadRepos: () => dispatch(loadRepos()),
-    loadBuilds: () => dispatch(loadBuilds()),
-    getCredentials: () => dispatch(getCredentials()),
-    newRepo: (payload) => dispatch(newRepo(payload)),
-    updateRepo: (payload) => dispatch(updateRepo(payload)),
   };
 }
 
@@ -69,7 +50,6 @@ const mapStateToProps = createStructuredSelector({
   selectedEnv: makeSelectEnv(),
   page: makeSelectUserPage(),
   connectStatus: makeSelectConnected(),
-  //repo: makeSelectRepo(),
 });
 
 // Wrap the component to inject dispatch and state into it

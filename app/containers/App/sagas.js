@@ -11,6 +11,10 @@ let credentials;
 
 
 //  https://github.com/redux-saga/redux-saga/blob/master/docs/advanced/Channels.md
+//  https://medium.com/@pierremaoui/using-websockets-with-redux-sagas-a2bf26467cab
+//  https://medium.com/@ebakhtarov/bidirectional-websockets-with-redux-saga-bfd5b677c7e7
+//  https://youfoundron.com/blog/websockets-in-redux-using-sagas
+//  http://www.codeblocq.com/2017/08/How-to-receive-messages-from-web-sockets-using-redux-saga/
 
 const axios = require('axios');
 
@@ -94,7 +98,22 @@ function* setupClient() {
     port: 443,
     host: credentials.iotEndpoint,
   });
-  yield fork(watchClient, client);
+  return eventChannel(emit => {
+
+    const receiveMsg = (event) => {
+      emit(event.payload);
+    };
+
+    const updateEvent = (event) => {
+      emit(event.payload);
+    };
+
+    const unsubscribe = () => {
+      client.end(() => {
+        console.log('killed the client...');
+      });
+    };
+  });
 }
 
 function* checkCredentials() {

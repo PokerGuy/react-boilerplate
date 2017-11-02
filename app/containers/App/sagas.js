@@ -1,14 +1,15 @@
-import { take, put, call, fork, select, cancel, takeLatest } from 'redux-saga/effects';
+import { take, put, call, select, cancel, takeLatest } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_ENV, SET_USERPAGE } from './constants';
-import { setCredentials } from './actions';
-import { makeSelectURL } from './selectors';
+import { makeSelectURL, makeSelectUserPage } from './selectors';
 import { NEW_REPO, UPDATE_REPO } from '../HomePage/constants';
-import { newRepo, updateRepo } from '../HomePage/actions';
+import { NEW_BUILD, UPDATE_BUILD } from '../Builds/constants';
+import { NEW_DETAIL } from '../BuildDetails/constants';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 let credentials;
+let subscriptions = [];
 
 
 //  https://github.com/redux-saga/redux-saga/blob/master/docs/advanced/Channels.md
@@ -32,7 +33,7 @@ function callCreds(url) {
   });
 }
 
-function initClient() {
+function initClient(page) {
   return eventChannel(emitter => {
     console.log('setting up the client');
     console.log('here are the credentials');
@@ -49,7 +50,17 @@ function initClient() {
 
     client.on('connect', () => {
       console.log('CONNECTED!');
-      client.subscribe('repos');
+      console.log(`on the ${page}`);
+      console.log(`the length of subscriptions is ${subscriptions.length}`);
+      subscriptions.forEach((sub) => {
+        client.unsubscribe(sub);
+      });
+      switch (page) {
+        case 'repos':
+          client.subscribe('repos');
+          subscriptions.push('repos');
+          break;
+      }
     });
 
     client.on('error', (err) => {
@@ -111,7 +122,8 @@ function* pageChange() {
   } else {
     console.log('already have credentials in memory');
   }
-  const channel = yield call(initClient);
+  const page = yield select(makeSelectUserPage());
+  const channel = yield call(initClient, page);
   while (true) {
     const action = yield take(channel);
     yield put(action);

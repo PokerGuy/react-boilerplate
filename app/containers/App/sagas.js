@@ -12,6 +12,7 @@ let client;
 let credentials;
 let page;
 let repo;
+let subscription;
 
 const axios = require('axios');
 
@@ -86,12 +87,17 @@ function initClient() {
 }
 
 function subscribe() {
+  if (subscription) {
+    client.unsubscribe(subscription);
+  }
   switch (page) {
     case 'repos':
       client.subscribe('repos');
+      subscription = 'repos';
       break;
     case 'build':
       client.subscribe(`repos/${repo}`);
+      subscription = `repos/${repo}`;
       break;
   }
 }

@@ -34,33 +34,33 @@ import {
 export function setDetails(repo, start) {
   return {
     type: SET_DETAILS,
-    repo: repo,
-    start: start,
-  }
+    repo,
+    start,
+  };
 }
 
 export function loadDetails() {
   return {
     type: LOAD_DETAILS,
-  }
+  };
 }
 
 export function receivedDetails(details) {
   return {
     type: RECEIVED_DETAILS,
-    details: details,
-  }
+    details,
+  };
 }
 
 export function clearDetails() {
   return {
     type: CLEAR_DETAILS,
-  }
+  };
 }
 
 export function newDetail(detail) {
   return {
     type: NEW_DETAIL,
-    detail: detail,
-  }
+    detail,
+  };
 }

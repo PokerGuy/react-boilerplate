@@ -7,10 +7,10 @@ import { _ } from 'lodash';
 
 const selectHome = (state) => state.get('build_details');
 
-const makeSelectRepo = () => createSelector(
+const makeSelectDetailParams = () => createSelector(
   selectHome,
   (homeState) => {
-    return {repo: homeState.get('repo'), start: homeState.get('start')}
+    return { repo: homeState.get('repo'), start: homeState.get('start') };
   }
 );
 
@@ -21,6 +21,6 @@ const makeSelectDetails = () => createSelector(
 
 export {
   selectHome,
-  makeSelectRepo,
+  makeSelectDetailParams,
   makeSelectDetails,
 };

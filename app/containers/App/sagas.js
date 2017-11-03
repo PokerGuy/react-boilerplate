@@ -4,14 +4,17 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_ENV, SET_USERPAGE } from './constants';
 import { makeSelectURL, makeSelectUserPage } from './selectors';
 import { makeSelectRepo } from '../Builds/selectors';
+import { makeSelectDetailParams } from '../BuildDetails/selectors';
 import { NEW_REPO, UPDATE_REPO } from '../HomePage/constants';
 import { NEW_BUILD, UPDATE_BUILD } from '../Builds/constants';
 import { NEW_DETAIL } from '../BuildDetails/constants';
+import { loadRepos } from '../HomePage/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 let credentials;
 let page;
 let repo;
+let startTime;
 let subscription;
 
 const axios = require('axios');
@@ -75,6 +78,8 @@ function initClient() {
             return emitter({ type: UPDATE_BUILD, build: msg.payload });
           }
           break;
+        case 'build_details':
+          return emitter({ type: NEW_DETAIL, detail: msg.payload });
         default:
         //  Do nothing
       }
@@ -92,18 +97,37 @@ function subscribe() {
   }
   switch (page) {
     case 'repos':
-      client.subscribe('repos');
       subscription = 'repos';
+      client.subscribe(subscription);
       break;
     case 'build':
-      client.subscribe(`repos/${repo}`);
       subscription = `repos/${repo}`;
+      client.subscribe(subscription);
       break;
+    case 'build_details':
+      subscription = `repos/${repo}/${startTime}`;
+      client.subscribe(subscription);
   }
 }
 
 function* envChange() {
   console.log('envChange');
+  page = yield select(makeSelectUserPage());
+  //  Going to need new credentials since switching environments
+  const url = yield select(makeSelectURL());
+  credentials = yield call(callCreds, url);
+  localStorage.credentials = JSON.stringify(credentials);
+  //  Reload based on whatever page the user is on
+  switch (page) {
+    case 'repos':
+      yield put(loadRepos());
+      break;
+  }
+  const channel = yield call(initClient);
+  while (true) {
+    const action = yield take(channel);
+    yield put(action);
+  }
 }
 
 function* pageChange() {
@@ -111,6 +135,10 @@ function* pageChange() {
   page = yield select(makeSelectUserPage());
   if (page === 'build') {
     repo = yield select(makeSelectRepo());
+  } else if (page === 'build_details') {
+    const details = yield select(makeSelectDetailParams());
+    repo = details.repo;
+    startTime = details.start;
   }
   console.log('getting a new client');
   if (!credentials && localStorage.getItem('credentials')) {

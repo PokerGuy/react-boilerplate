@@ -6,7 +6,7 @@ import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects'
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_DETAILS } from './constants';
 import { receivedDetails, clearDetails } from './actions';
-import { makeSelectRepo } from './selectors';
+import { makeSelectDetailParams } from './selectors';
 import { makeSelectURL } from '../App/selectors';
 
 const axios = require('axios');
@@ -14,19 +14,19 @@ const axios = require('axios');
 function callBuilds(repo, start, url) {
   console.log(repo);
   console.log(start);
-  return new Promise(function(fulfill, reject) {
-    axios.get(url + '/build/' + repo + '/' + start)
-      .then(function(result) {
-        fulfill(result.data)
-      }).catch(function(err) {
-        reject(err)
-    })
-  })
+  return new Promise((fulfill, reject) => {
+    axios.get(`${url}/build/${repo}/${start}`)
+      .then((result) => {
+        fulfill(result.data);
+      }).catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 export function* getDetails() {
   yield put(clearDetails());
-  const repo = yield select(makeSelectRepo());
+  const repo = yield select(makeSelectDetailParams());
   const url = yield select(makeSelectURL());
   const details = yield call(callBuilds, repo.repo, repo.start, url);
   yield put(receivedDetails(details));

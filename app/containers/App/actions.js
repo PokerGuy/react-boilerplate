@@ -45,6 +45,7 @@ export function setConnection(status) {
 }
 
 export function setEnv(env) {
+  console.log('In setEnv ' + env);
   return {
     type: SET_ENV,
     env,

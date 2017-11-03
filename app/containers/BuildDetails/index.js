@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Details from '../../components/Details';
 import { setDetails } from './actions';
-import { makeSelectDetails, makeSelectRepo } from './selectors';
+import { makeSelectDetails, makeSelectDetailParams } from './selectors';
 import { setPage } from '../App/actions';
 const moment = require('moment-timezone');
 
@@ -55,8 +55,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   details: makeSelectDetails(),
-  querystringParams: makeSelectRepo(),
-  repo: makeSelectRepo(),
+  repo: makeSelectDetailParams(),
 });
 
 // Wrap the component to inject dispatch and state into it

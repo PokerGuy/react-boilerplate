@@ -19,54 +19,56 @@ function cellColor(row) {
 }
 
 function ReposList(repos) {
-  let content = (<img src={Waiting} />);
+  let content = (<div className="centered"><img src={Waiting} /></div>);
   if (repos.repos) {
-    const columns = [{
-      Header: 'Repo',
-      accessor: 'repo_name',
-      filterable: true,
-    },
-      {
-        Header: 'Status',
-        filterable: true,
-        Cell: (row) => (
-          cellColor(row)
-        ),
-      },
-      {
-        Header: 'Committer',
-        accessor: 'committer.name',
-        filterable: true,
-      },
-      {
-        Header: 'Start Time',
-        accessor: 'start_time',
-        filterable: true,
-        Cell: (row) => (
-          formatTime(row.value)
-        ),
-      },
-      {
-        Header: 'Message',
-        accessor: 'message',
-      },
-      {
-        Header: 'Git Hash',
-        accessor: 'hash',
-        filterable: true,
-        Cell: (row) => (
-          row.value.substring(0, 6)
-        ),
-      },
-      {
-        Header: 'Builds',
+    if (repos.repos.length > 0) {
+      const columns = [{
+        Header: 'Repo',
         accessor: 'repo_name',
-        Cell: (row) => (
-          <Link to={`/build/${row.value}`}>Details</Link>
-        ),
+        filterable: true,
       },
-    ];
-    content = <ReactTable data={repos.repos} columns={columns} />;
+        {
+          Header: 'Status',
+          filterable: true,
+          Cell: (row) => (
+            cellColor(row)
+          ),
+        },
+        {
+          Header: 'Committer',
+          accessor: 'committer.name',
+          filterable: true,
+        },
+        {
+          Header: 'Start Time',
+          accessor: 'start_time',
+          filterable: true,
+          Cell: (row) => (
+            formatTime(row.value)
+          ),
+        },
+        {
+          Header: 'Message',
+          accessor: 'message',
+        },
+        {
+          Header: 'Git Hash',
+          accessor: 'hash',
+          filterable: true,
+          Cell: (row) => (
+            row.value.substring(0, 6)
+          ),
+        },
+        {
+          Header: 'Builds',
+          accessor: 'repo_name',
+          Cell: (row) => (
+            <Link to={`/build/${row.value}`}>Details</Link>
+          ),
+        },
+      ];
+      content = <ReactTable data={repos.repos} columns={columns}/>;
+    }
   }
   return (
     <div>

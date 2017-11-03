@@ -1,7 +1,3 @@
-/**
- * Gets the repositories of the user from Github
- */
-
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_REPO, LOAD_BUILDS } from './constants';
@@ -12,14 +8,14 @@ import { makeSelectURL } from '../App/selectors';
 const axios = require('axios');
 
 function callBuilds(repo, url) {
-  return new Promise(function(fulfill, reject) {
-    axios.get(url + '/build/' + repo)
-      .then(function(result) {
-        fulfill(result.data)
-      }).catch(function(err) {
-        reject(err)
-    })
-  })
+  return new Promise((fulfill, reject) => {
+    axios.get(`${url}/build/${repo}`)
+      .then((result) => {
+        fulfill(result.data);
+      }).catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 export function* getBuilds() {

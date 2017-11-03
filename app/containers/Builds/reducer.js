@@ -1,14 +1,3 @@
-/*
- * HomeReducer
- *
- * The reducer takes care of our data. Using actions, we can change our
- * application state.
- * To add a new action, add it to the switch statement in the reducer function
- *
- * Example:
- * case YOUR_ACTION_CONSTANT:
- *   return state.set('yourStateVariable', true);
- */
 import { fromJS } from 'immutable';
 
 import {
@@ -23,7 +12,6 @@ import {
 const initialState = fromJS({
   repo: null,
   builds: null,
-  connected: false,
 });
 
 function buildReducer(state = initialState, action) {
@@ -37,12 +25,11 @@ function buildReducer(state = initialState, action) {
     case NEW_BUILD:
       return state.set('builds', [...state.get('builds'), action.build]);
     case UPDATE_BUILD:
-      const update = state.get('builds').map(function(build) {
+      const update = state.get('builds').map((build) => {
         if (build.build_start === action.build.build_start) {
           return action.build;
-        } else {
-          return build;
         }
+        return build;
       });
       return state.set('builds', update);
     default:

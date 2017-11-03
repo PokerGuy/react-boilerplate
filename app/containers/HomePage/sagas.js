@@ -1,7 +1,3 @@
-/**
- * Gets the repositories of the user from Github
- */
-
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_REPOS } from './constants';
@@ -10,21 +6,21 @@ import { makeSelectURL } from '../App/selectors';
 const axios = require('axios');
 
 function callRepos(url) {
-  return new Promise(function(fulfill, reject) {
-    axios.get(url + '/locks')
-      .then(function(result) {
-        fulfill(result.data)
-      }).catch(function(err) {
-        reject(err)
-    })
-  })
+  return new Promise((fulfill, reject) => {
+    axios.get(`${url}/locks`)
+      .then((result) => {
+        fulfill(result.data);
+      }).catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 function* getRepos() {
   yield put(clearRepos());
   const url = yield select(makeSelectURL());
   const repos = yield call(callRepos, url);
-  yield put (receivedRepos(repos));
+  yield put(receivedRepos(repos));
 }
 
 /**

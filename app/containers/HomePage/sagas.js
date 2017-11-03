@@ -17,10 +17,8 @@ function callRepos(url) {
 }
 
 function* getRepos() {
-  console.log('getting repos...');
   yield put(clearRepos());
   const url = yield select(makeSelectURL());
-  console.log('url is ' + url);
   const repos = yield call(callRepos, url);
   yield put(receivedRepos(repos));
 }

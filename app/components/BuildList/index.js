@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -78,7 +78,7 @@ function BuildList(builds) {
           ),
         },
       ];
-      content = <ReactTable data={builds.builds} columns={columns}/>;
+      content = <ReactTable data={builds.builds} columns={columns} />;
     }
   }
   return (
@@ -86,10 +86,5 @@ function BuildList(builds) {
       {content}
     </div>);
 }
-
-
-BuildList.propTypes = {
-  builds: PropTypes.any,
-};
 
 export default BuildList;

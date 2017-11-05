@@ -24,22 +24,17 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   render() {
-    let connStatus = <div>Disconnected: Repos</div>;
-    if (this.props.connectStatus === 'connected') {
-      connStatus = <div>Connected: Repos</div>
-    }
     return (
       <article>
         <Helmet
           title="Repos"
           meta={[
-            {name: 'description', content: 'Status of Repos'},
+            { name: 'description', content: 'Status of Repos' },
           ]}
         />
         <div>
           <br />
-          {connStatus} <br />
-          <ReposList repos={this.props.repos}/>
+          <ReposList repos={this.props.repos} />
         </div>
       </article>
     );
@@ -49,7 +44,6 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 HomePage.propTypes = {
   loadRepos: React.PropTypes.func,
   repos: React.PropTypes.array,
-  connectStatus: React.PropTypes.string,
   setPage: React.PropTypes.func,
 };
 
@@ -62,7 +56,6 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
-  connectStatus: makeSelectConnected(),
 });
 
 // Wrap the component to inject dispatch and state into it

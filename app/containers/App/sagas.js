@@ -1,6 +1,5 @@
-import { take, put, call, select, cancel, takeLatest } from 'redux-saga/effects';
+import { take, put, call, select, takeLatest } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
-import { LOCATION_CHANGE } from 'react-router-redux';
 import { SET_ENV, SET_USERPAGE } from './constants';
 import { makeSelectURL, makeSelectUserPage } from './selectors';
 import { makeSelectRepo } from '../Builds/selectors';

@@ -11,7 +11,6 @@ import { createStructuredSelector } from 'reselect';
 import ReposList from '../../components/ReposList';
 import { loadRepos } from './actions';
 import { makeSelectRepos } from './selectors';
-import { makeSelectConnected } from '../App/selectors';
 import { setPage } from '../App/actions';
 
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function

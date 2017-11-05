@@ -7,7 +7,6 @@ import {
 } from './constants';
 
 export function loadRepos() {
-  console.log('LOAD_REPOS');
   return {
     type: LOAD_REPOS,
   };

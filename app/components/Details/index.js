@@ -8,7 +8,7 @@ function formatTime(time) {
 
 
 function Details(details) {
-  let content = (<div><img src={Waiting} /></div>);
+  let content = (<div className="centered"><img src={Waiting} /></div>);
   if (details.details) {
     const sorted = _.sortBy(details.details, 'build_step_time');
     content = sorted.map((detail, index) => {

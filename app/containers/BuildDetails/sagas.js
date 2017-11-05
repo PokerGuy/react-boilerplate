@@ -12,8 +12,6 @@ import { makeSelectURL } from '../App/selectors';
 const axios = require('axios');
 
 function callBuilds(repo, start, url) {
-  console.log(repo);
-  console.log(start);
   return new Promise((fulfill, reject) => {
     axios.get(`${url}/build/${repo}/${start}`)
       .then((result) => {

@@ -9,6 +9,7 @@ import { NEW_REPO, UPDATE_REPO } from '../HomePage/constants';
 import { NEW_BUILD, UPDATE_BUILD } from '../Builds/constants';
 import { NEW_DETAIL } from '../BuildDetails/constants';
 import { loadRepos } from '../HomePage/actions';
+import { loadBuilds } from '../Builds/actions';
 const awsIot = require('aws-iot-device-sdk');
 let client;
 let credentials;
@@ -43,14 +44,10 @@ function initClient() {
     });
 
     client.on('connect', () => {
-      console.log('CONNECTED!');
-      console.log(`on the ${page}`);
       subscribe();
     });
 
     client.on('error', (err) => {
-      console.log('ERROR');
-      console.log(err);
       //  Probably bad credentials...
       localStorage.removeItem('credentials');
     });
@@ -111,18 +108,20 @@ function subscribe() {
 }
 
 function* envChange() {
-  console.log('envChange');
   page = yield select(makeSelectUserPage());
+  switch (page) {
+    case 'repos':
+      yield put(loadRepos());
+      break;
+    case 'build':
+      yield put(loadBuilds());
+      break;
+  }
   //  Going to need new credentials since switching environments
   const url = yield select(makeSelectURL());
   credentials = yield call(callCreds, url);
   localStorage.credentials = JSON.stringify(credentials);
   //  Reload based on whatever page the user is on
-  switch (page) {
-    case 'repos':
-      yield put(loadRepos());
-      break;
-  }
   const channel = yield call(initClient);
   while (true) {
     const action = yield take(channel);
@@ -131,7 +130,6 @@ function* envChange() {
 }
 
 function* pageChange() {
-  console.log('pageChange');
   page = yield select(makeSelectUserPage());
   if (page === 'build') {
     repo = yield select(makeSelectRepo());
@@ -140,7 +138,6 @@ function* pageChange() {
     repo = details.repo;
     startTime = details.start;
   }
-  console.log('getting a new client');
   if (!credentials && localStorage.getItem('credentials')) {
     credentials = JSON.parse(localStorage.getItem('credentials'));
   } else if (!credentials) {
@@ -163,10 +160,6 @@ export function* globalSaga() {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
-  const envWatcher = yield takeLatest(SET_ENV, envChange);
-  const pageWatcher = yield takeLatest(SET_USERPAGE, pageChange);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(envWatcher, pageWatcher);
+  yield takeLatest(SET_ENV, envChange);
+  yield takeLatest(SET_USERPAGE, pageChange);
 }

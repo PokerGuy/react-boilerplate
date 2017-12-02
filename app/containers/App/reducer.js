@@ -11,7 +11,6 @@
  */
 
 import { fromJS } from 'immutable';
-const awsIot = require('aws-iot-device-sdk');
 
 import {
   SET_CONNECTION,

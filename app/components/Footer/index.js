@@ -8,7 +8,7 @@ function Footer() {
         This project is licensed under the MIT license.
       </section>
       <section>
-        Made with love by <a href="mailto:austintechblogger@gmail.com">Evan Zlotnick.</a>
+        Made with love by <a href="mailto:austintechblogger@gmail.com">Evan Zlotnick</a>
       </section>
     </Wrapper>
   );

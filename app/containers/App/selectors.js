@@ -32,13 +32,13 @@ const makeSelectURL = () => createSelector(
     const env = globalState.get('selectedEnv');
     switch (env.toLowerCase()) {
       case 'sandbox':
-        return 'https://sandbox.api.magickpics.com';
+        return 'https://sandbox.api.magickpics.com/synergy';
       case 'test':
-        return 'https://test.api.magickpics.com';
+        return 'https://test.api.magickpics.com/synegy';
       case 'prod':
-        return 'https://api.magickpics.com';
+        return 'https://api.magickpics.com/synergy';
       default:
-        return 'https://sandbox.api.magickpics.com';
+        return 'https://sandbox.api.magickpics.com/synergy';
     }
   }
 );

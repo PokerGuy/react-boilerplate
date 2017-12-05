@@ -34,7 +34,7 @@ const makeSelectURL = () => createSelector(
       case 'sandbox':
         return 'https://sandbox.api.magickpics.com/synergy';
       case 'test':
-        return 'https://test.api.magickpics.com/synegy';
+        return 'https://test.api.magickpics.com/synergy';
       case 'prod':
         return 'https://api.magickpics.com/synergy';
       default:
